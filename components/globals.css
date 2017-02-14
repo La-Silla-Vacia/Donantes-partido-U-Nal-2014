@@ -1,7 +1,7 @@
 @import "variables.css";
 
 #chart svg {
-  font-size: .8em;
+  font-size: .9em;
   overflow: visible;
 }
 
@@ -10,13 +10,24 @@
 }
 
 .node rect {
-  fill-opacity: .9;
+  fill: var(--brand-black);
+  fill-opacity: .2;
   shape-rendering: crispEdges;
+  transition: fill-opacity var(--transition-duration);
   /*stroke-width: 10;*/
 }
 
 .node text {
-  pointer-events: none;
+  opacity: .35;
+  transition: opacity var(--transition-duration);
+}
+
+.node--active rect {
+  fill-opacity: 1;
+}
+
+.node--active text {
+  opacity: 1;
 }
 
 .link {
@@ -25,10 +36,6 @@
   transition: stroke-opacity var(--transition-duration);
 }
 
-.link::before {
-  content: "asdf";
-}
-
-.link:hover {
+.link:hover, .link--active {
   stroke-opacity: .8;
 }

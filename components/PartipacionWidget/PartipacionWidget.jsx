@@ -160,7 +160,9 @@ class Header extends React.Component {
       const link = svg.append("g").selectAll(".link")
         .data(links)
         .enter().append("path")
-        .attr("class", "link")
+        .attr("class", function (d) {
+          return `link link--entidad-${d.target.entidadId} link--partido-${d.source.partidoId}`
+        })
         .attr("d", path)
         .style("stroke-width", function (d) {
           return Math.max(1, d.dy);
@@ -175,10 +177,18 @@ class Header extends React.Component {
 
       link.on('mouseenter', (el) => {
         self.setState({'hovering': el.source.partidoId});
+        const partidoClass = ".node--partido-" + el.source.partidoId;
+        const entidadClass = ".node--entidad-" + el.target.entidadId;
+        document.querySelector(partidoClass).classList.add('node--active');
+        document.querySelector(entidadClass).classList.add('node--active');
       });
 
       link.on('mouseleave', (el) => {
-        self.setState({'hovering': false})
+        self.setState({'hovering': false});
+        const partidoClass = ".node--partido-" + el.source.partidoId;
+        const entidadClass = ".node--entidad-" + el.target.entidadId;
+        document.querySelector(partidoClass).classList.remove('node--active');
+        document.querySelector(entidadClass).classList.remove('node--active');
       });
 
       link.append("title")
@@ -190,7 +200,13 @@ class Header extends React.Component {
       const node = svg.append("g").selectAll(".node")
         .data(nodes)
         .enter().append("g")
-        .attr("class", "node")
+        .attr("class", function (d) {
+          if (d.entidadId) {
+            return "node node--entidad-" + d.entidadId;
+          } else {
+            return "node node--partido-" + d.partidoId;
+          }
+        })
         .attr("transform", function (d) {
 
           let y = d.y + sankey.nodeWidth();
@@ -201,6 +217,42 @@ class Header extends React.Component {
           return "translate(" + d.x + "," + d.y + ")";
         });
 
+      node.on('mouseenter', (el) => {
+        if (el.partidoId) {
+          const id = el.partidoId;
+          document.querySelector('.node--partido-' + id).classList.add('node--active');
+          const links = document.querySelectorAll('.link--partido-' + id);
+          for (let i = 0; i < links.length; i++) {
+            links[i].classList.add("link--active");
+          }
+        } else {
+          const id = el.entidadId;
+          document.querySelector('.node--entidad-' + id).classList.add('node--active');
+          const links = document.querySelectorAll('.link--entidad-' + id);
+          for (let i = 0; i < links.length; i++) {
+            links[i].classList.add("link--active");
+          }
+        }
+      });
+
+      node.on('mouseleave', (el) => {
+        if (el.partidoId) {
+          const id = el.partidoId;
+          document.querySelector('.node--partido-' + id).classList.remove('node--active');
+          const links = document.querySelectorAll('.link--partido-' + id);
+          for (let i = 0; i < links.length; i++) {
+            links[i].classList.remove("link--active");
+          }
+        } else {
+          const id = el.entidadId;
+          document.querySelector('.node--entidad-' + id).classList.remove('node--active');
+          const links = document.querySelectorAll('.link--entidad-' + id);
+          for (let i = 0; i < links.length; i++) {
+            links[i].classList.remove("link--active");
+          }
+        }
+      });
+
       node.append("rect")
         .attr("height", sankey.nodeWidth())
         .attr("width", function (d) {
@@ -210,7 +262,7 @@ class Header extends React.Component {
           if (d.colorPartido) {
             return d.color = d.colorPartido;
           } else {
-            return d.color = "#dadadc";
+            return d.color = "";
           }
         })
         .style("stroke", "#fff")
@@ -222,12 +274,14 @@ class Header extends React.Component {
       node.append("text")
         .attr("text-anchor", "left")
         .attr("x", sankey.nodeWidth() * 1.5)
-        .attr("y", (d) => { return -(d.dy / 2) })
+        .attr("y", (d) => {
+          return -(d.dy / 2)
+        })
         .attr("dy", ".35em")
         .attr("transform", "rotate(90)")
         .text(function (d) {
           if (d.y > 1)
-           return d.name;
+            return d.name;
         })
         .filter(function (d) {
           return d.x < width / 2;
