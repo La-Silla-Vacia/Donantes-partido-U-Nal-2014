@@ -15,8 +15,7 @@ class HomePage extends React.Component {
     return (
       <Layout>
         <div className={s.content} dangerouslySetInnerHTML={{ __html: html }} />
-
-        <Tendencias/>
+        {/*<Tendencias/>*/}
         <Partipacion/>
       </Layout>
     );

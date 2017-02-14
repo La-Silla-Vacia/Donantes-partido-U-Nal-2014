@@ -1,0 +1,43 @@
+@import "../variables.css";
+
+.root {
+  width: 100%;
+}
+
+.root__hovering .item {
+  opacity: .35;
+}
+
+.list {
+  list-style: none;
+  line-height: 1.5;
+  color: #898d90;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+  max-width: 73em;
+  margin: 2em auto 2em;
+}
+
+.item {
+  float: left;
+  width: 18em;
+  transition: opacity var(--transition-duration), color var(--transition-duration);
+}
+
+.list .item__hover {
+  opacity: 1;
+  color: var(--brand-black);
+}
+
+.bullet {
+  width: 1em;
+  height: 1em;
+  display: block;
+  margin-right: 1em;
+  border-radius: 1em;
+  margin-top: 0.15em;
+  float: left;
+}

@@ -21,8 +21,12 @@
 
 .link {
   fill: none;
-  /*stroke: #000;*/
   stroke-opacity: .2;
+  transition: stroke-opacity var(--transition-duration);
+}
+
+.link::before {
+  content: "asdf";
 }
 
 .link:hover {

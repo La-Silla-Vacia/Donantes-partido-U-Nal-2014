@@ -3,6 +3,7 @@ const d3 = require('d3');
 import sankeyLib from '../Sankey/Sankey.js';
 import Widget from '../Widget';
 import Select from '../Select';
+import Legend from '../Legend';
 import s from './PartipacionWidget.css';
 
 class Header extends React.Component {
@@ -24,7 +25,9 @@ class Header extends React.Component {
           value: "entidades"
         }
       ],
-    }
+      partidos: [],
+      hovering: false
+    };
   }
 
   static switchOption(e) {
@@ -47,6 +50,11 @@ class Header extends React.Component {
         select={select}
       >
 
+        <Legend
+          partidos={this.state.partidos}
+          hovering={this.state.hovering}
+        />
+
         <div id="chart"></div>
 
       </Widget>
@@ -54,9 +62,9 @@ class Header extends React.Component {
   }
 
   componentDidMount() {
+    const self = this;
 
     d3.sankey = sankeyLib;
-
     const chart = document.querySelector('#chart');
     const chartWidth = 1200;
 
@@ -86,6 +94,7 @@ class Header extends React.Component {
 
     d3.json("https://rayos-x-al-clientelismo.firebaseio.com/data.json", function (energy) {
 
+      const partidos = [];
       const nodes = [];
       const links = [];
 
@@ -101,25 +110,47 @@ class Header extends React.Component {
             if (node.name == partido) partidoInNodes = true;
             if (node.name == entidad) entidadInNodes = true;
           });
-          if (!partidoInNodes) nodes.push({name: partido, colorPartido: el.colorPartido});
+          if (!partidoInNodes) {
+            nodes.push({name: partido, colorPartido: el.colorPartido});
+          }
           if (!entidadInNodes) nodes.push({name: entidad});
 
           let partidoIndex = 0;
           let entidadIndex = 0;
           nodes.map((node, index) => {
-            if (node.name == partido) partidoIndex = index;
-            if (node.name == entidad) entidadIndex = index;
+            if (node.name == partido) {
+              node.partidoId = index + 1;
+              partidoIndex = index;
+            }
+            if (node.name == entidad) {
+              node.entidadId = index + 1;
+              entidadIndex = index;
+            }
           });
 
           if (presupuesto) {
+            let linkInLinks = false;
             const value = presupuesto / 1000;
             const result = {"source": partidoIndex, "target": entidadIndex, "value": value};
-            if (value > 10) {
-              links.push(result);
-            }
+
+            links.map((link) => {
+              if (link.source === partidoIndex && link.target === entidadIndex) {
+                link.value += value;
+                linkInLinks = true;
+              }
+            });
+
+            if (!linkInLinks) links.push(result);
           }
         }
       });
+
+
+      nodes.map((node) => {
+        if (node.partidoId) partidos.push(node);
+      });
+
+      self.setState({partidos});
 
       sankey
         .nodes(nodes)
@@ -141,6 +172,14 @@ class Header extends React.Component {
         .sort(function (a, b) {
           return b.dy - a.dy;
         });
+
+      link.on('mouseenter', (el) => {
+        self.setState({'hovering': el.source.partidoId});
+      });
+
+      link.on('mouseleave', (el) => {
+        self.setState({'hovering': false})
+      });
 
       link.append("title")
         .text(function (d) {
