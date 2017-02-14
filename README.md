@@ -42,8 +42,7 @@ generator](https://github.com/kriasoft/react-static-boilerplate/tree/generator-r
 bootstrap your project):
 
 ```shell
-$ git clone -o react-static-boilerplate -b master --single-branch \
-      https://github.com/La-Silla-Vacia/Album-del-clientelismo.git Album-del-clientelismo
+$ git clone https://github.com/La-Silla-Vacia/Album-del-clientelismo.git Album-del-clientelismo
 $ cd Album-del-clientelismo
 $ yarn install                  # Install project dependencies listed in package.json
 ```
