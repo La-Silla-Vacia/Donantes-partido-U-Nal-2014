@@ -1,0 +1,32 @@
+@import "../variables.css";
+
+.root {
+  width: 100%;
+  font-size: .7em;
+  font-family: 'Lato', Helvetica, sans-serif;
+  font-weight: 700;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  text-transform: uppercase;
+}
+
+.list__item {
+  display: inline-block;
+}
+
+.link {
+  text-decoration: none;
+  color: var(--brand-grey);
+  padding: 1em;
+  display: block;
+}
+
+.link__active {
+  border: 1px solid var(--brand-lightgrey);
+  border-bottom: 0;
+  box-shadow: 0 2px #fff;
+}

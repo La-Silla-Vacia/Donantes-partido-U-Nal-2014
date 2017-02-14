@@ -39,7 +39,7 @@ function matchURI(route, path) {
 
   const params = Object.create(null);
 
-  for (let i = 1; i < match.length; i++) {
+  for (let i = 1; i < match.length; i += 1) {
     params[route.keys[i - 1].name] = match[i] !== undefined ? decodeParam(match[i]) : undefined;
   }
 
@@ -49,12 +49,14 @@ function matchURI(route, path) {
 // Find the route matching the specified location (context), fetch the required data,
 // instantiate and return a React component
 function resolve(routes, context) {
-  for (const route of routes) {
+  for (let index = 0; index < routes.length; index += 1) {
+    const route = routes[index];
+
     const params = matchURI(route, context.error ? '/error' : context.pathname);
 
-    if (!params) {
-      continue;
-    }
+    /* eslint-disable */
+    if (!params) continue;
+    /* eslint-enable */
 
     // Check if the route has any data requirements, for example:
     // { path: '/tasks/:id', data: { task: 'GET /api/tasks/$id' }, page: './pages/task' }
@@ -63,6 +65,7 @@ function resolve(routes, context) {
       const keys = Object.keys(route.data);
       return Promise.all([
         route.load(),
+        /* eslint-disable */
         ...keys.map(key => {
           const query = route.data[key];
           const method = query.substring(0, query.indexOf(' ')); // GET
@@ -71,8 +74,10 @@ function resolve(routes, context) {
           Object.keys(params).forEach((k) => {
             url = url.replace(`${k}`, params[k]);
           });
+
           return fetch(url, { method }).then(resp => resp.json());
         }),
+        /* eslint-enable */
       ]).then(([Page, ...data]) => {
         const props = keys.reduce((result, key, i) => ({ ...result, [key]: data[i] }), {});
         return <Page route={{ ...route, params }} error={context.error} {...props} />;

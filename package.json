@@ -1,7 +1,7 @@
 {
   "name": "app",
-  "version": "0.0.0",
-  "private": true,
+  "version": "0.0.7",
+  "private": false,
   "engines": {
     "node": ">=6",
     "npm": ">=3.8"
@@ -9,6 +9,8 @@
   "dependencies": {
     "babel-polyfill": "^6.22.0",
     "classnames": "^2.2.5",
+    "d3-plugins-sankey": "^1.2.1",
+    "d3.chart.sankey": "^0.4.0",
     "fastclick": "^1.0.6",
     "history": "^4.5.1",
     "react": "^15.4.2",
@@ -47,6 +49,7 @@
     "json-loader": "^0.5.4",
     "markdown-it": "^8.2.2",
     "mocha": "^3.2.0",
+    "normalize.css": "^5.0.0",
     "path-to-regexp": "^1.7.0",
     "pixrem": "^3.0.2",
     "pleeease-filters": "^3.0.0",

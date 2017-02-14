@@ -1,0 +1,34 @@
+:root {
+  /*
+   * Typography
+   * ======================================================================== */
+
+  /* --font-family-base: 'Segoe UI', 'HelveticaNeue-Light', sans-serif; */
+
+  --brand-color: #e6007e;
+  --brand-grey: #6f7372;
+  --brand-lightgrey: #d9ddde;
+  --brand-black: #2d3132;
+
+  --text-color: var(--brand-black);
+
+  --font-family-base: 'Roboto', Helvetica, sans-serif;
+  --font-family-display: "Roboto Slab", Georgia, sans-serif;
+  --max-content-width: 60em;
+
+  --transition-duration: .2s;
+  /*
+   * Layout
+   * ======================================================================== */
+
+  /* --max-content-width: 1000px; */
+
+  /*
+   * Media queries breakpoints
+   * ======================================================================== */
+
+  --screen-xs-min: 480px;  /* Extra small screen / phone */
+  --screen-sm-min: 768px;  /* Small screen / tablet */
+  --screen-md-min: 992px;  /* Medium screen / desktop */
+  --screen-lg-min: 1200px; /* Large screen / wide desktop */
+}

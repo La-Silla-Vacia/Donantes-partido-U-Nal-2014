@@ -8,10 +8,10 @@ comprised of five major parts:
 * **Routes Loader** — a custom loader for Webpack that converts routes from JSON to JavaScript on
   build (see [`tools/routes-loader.js`](../tools/routes-loader.js))
 * **URL Matcher** — a function that checks if a given URI matches to the route's `path` string (see
-  `matchURI()` method in [`src/router.js`](../src/router.js))
+  `matchURI()` method in [`src/router.js`](../src/router.jsx))
 * **Route Resolver** — a function just resolves a URI string to the first matched route, fetches
   all the required data and returns a React component to render (see `resolve()` method in
-  [`src/router.js`](../src/router.js))
+  [`src/router.js`](../src/router.jsx))
 * **History** — client-side navigation library powered by [`history`](https://github.com/ReactJSTraining/history)
   npm module (the same one used in `react-router`) that helps with transitioning between pages
   (screens) in the browser without causing full-page refresh (see [`src/history.js`](../src/history.js))
@@ -42,7 +42,7 @@ file structure. For a simple to-do app, this list of routes may look like this (
 ```
 
 This list of routes is referenced inside the main application file (where the React app is beeing
-bootstrapped) by using [`routes-loader`](../utils/routes-loader.js) (see [`src/main.js`](../src/main.js)):
+bootstrapped) by using [`routes-loader`](../utils/routes-loader.js) (see [`src/main.js`](../src/main.jsx)):
 
 ```js
 import routes from '!!../tools/routes-loader!./routes.json';
@@ -91,7 +91,7 @@ router.resolve(routes, { pathname: '/tasks/123' }).then(component => {
 
 The `resolve(routes, context)` method will find the first route from the list matching to the
 `/tasks/123` URI string, execute its `load()` method, and return corresponding React component as a
-result wrapped into ES6 Promise (see [`src/router.js`](../src/router.js).
+result wrapped into ES6 Promise (see [`src/router.js`](../src/router.jsx).
 
 If a route contains some REST API or GraphQL endpoints as data requirements for the given route,
 the `resolve(..)` method can also fetch the required data from these endpoints. For example, a
@@ -153,7 +153,7 @@ class HomePage extends React.Component {
 The `transition(event)` method above cancels default behavior of the `<a>` element that causes
 full-page refresh and instead redirects a user to the `/tasks/123` page by using HTML5 History API.
 This transition is then handled by `history.listen(render)` listener inside the
-[`src/main.js`](../src/main.js) file.
+[`src/main.js`](../src/main.jsx) file.
 
 RSB comes with a helper component that can be used instead of `<a>` elements, see
 [`components/Link/Link.js`](../components/Link/Link.js). So, instead of writing `<a href="/tasks/123"

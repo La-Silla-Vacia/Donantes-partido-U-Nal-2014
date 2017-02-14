@@ -1,13 +1,3 @@
-/**
- * React Static Boilerplate
- * https://github.com/kriasoft/react-static-boilerplate
- *
- * Copyright © 2015-present Kriasoft, LLC. All rights reserved.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
- */
-
 import 'babel-polyfill';
 import 'whatwg-fetch';
 
@@ -17,11 +7,14 @@ import FastClick from 'fastclick';
 import { Provider } from 'react-redux';
 
 import store from './store';
-import router from './router';
+import router from './router.jsx';
 import history from './history';
 
 let routes = require('./routes.json').default; // Loaded with utils/routes-loader.js
+
+/* eslint-disable */
 const container = document.getElementById('container');
+/* eslint-enable */
 
 function renderComponent(component) {
   ReactDOM.render(<Provider store={store}>{component}</Provider>, container);
@@ -43,7 +36,9 @@ render(history.location);
 // Eliminates the 300ms delay between a physical tap
 // and the firing of a click event on mobile browsers
 // https://github.com/ftlabs/fastclick
+/* eslint-disable */
 FastClick.attach(document.body);
+/* eslint-enable */
 
 // Enable Hot Module Replacement (HMR)
 if (module.hot) {

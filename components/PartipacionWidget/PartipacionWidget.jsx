@@ -1,0 +1,201 @@
+import React from 'react';
+const d3 = require('d3');
+import sankeyLib from '../Sankey/Sankey.js';
+import Widget from '../Widget';
+import Select from '../Select';
+import s from './PartipacionWidget.css';
+
+class Header extends React.Component {
+
+  constructor() {
+    super();
+    this.state = {
+      selectOptions: [
+        {
+          label: "Partidos Póliticos",
+          value: "partidosPoliticos",
+        },
+        {
+          label: "Departemento",
+          value: "departemento"
+        },
+        {
+          label: "Entidades",
+          value: "entidades"
+        }
+      ],
+    }
+  }
+
+  static switchOption(e) {
+    console.log(e);
+  }
+
+  render() {
+    const select = (
+      <Select
+        className={s.select}
+        value="Entidades"
+        options={this.state.selectOptions}
+        callback={Header.switchOption}
+      />
+    );
+
+    return (
+      <Widget
+        title="Partipación de los Partidos Póliticos en %s"
+        select={select}
+      >
+
+        <div id="chart"></div>
+
+      </Widget>
+    );
+  }
+
+  componentDidMount() {
+
+    d3.sankey = sankeyLib;
+
+    const chart = document.querySelector('#chart');
+    const chartWidth = 1200;
+
+    const margin = {top: 10, right: 1, bottom: 6, left: 1},
+      width = chartWidth - margin.left - margin.right, // was 960
+      //height = 1500 - margin.top - margin.bottom; // was 500
+      height = 650; // UBS Example
+
+    const formatNumber = d3.format(",.0f"),
+      format = function (d) {
+        return formatNumber(d / 1000).replace(",", ".") + " millones";
+      },
+      color = d3.scale.category20();
+
+    const svg = d3.select("#chart").append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+    const sankey = d3.sankey()
+      .nodeWidth(20) // was 15
+      .nodePadding(10) // was 10
+      .size([width, height]);
+
+    const path = sankey.link();
+
+    d3.json("https://rayos-x-al-clientelismo.firebaseio.com/data.json", function (energy) {
+
+      const nodes = [];
+      const links = [];
+
+      energy.map((el) => {
+        const partido = el.partido;
+        const presupuesto = el.presupuestoDeInversion;
+
+        if (partido !== "Sin definir" && presupuesto) {
+          const entidad = el.entidad;
+          let partidoInNodes = false;
+          let entidadInNodes = false;
+          nodes.map((node) => {
+            if (node.name == partido) partidoInNodes = true;
+            if (node.name == entidad) entidadInNodes = true;
+          });
+          if (!partidoInNodes) nodes.push({name: partido, colorPartido: el.colorPartido});
+          if (!entidadInNodes) nodes.push({name: entidad});
+
+          let partidoIndex = 0;
+          let entidadIndex = 0;
+          nodes.map((node, index) => {
+            if (node.name == partido) partidoIndex = index;
+            if (node.name == entidad) entidadIndex = index;
+          });
+
+          if (presupuesto) {
+            const value = presupuesto / 1000;
+            const result = {"source": partidoIndex, "target": entidadIndex, "value": value};
+            if (value > 10) {
+              links.push(result);
+            }
+          }
+        }
+      });
+
+      sankey
+        .nodes(nodes)
+        .links(links)
+        .layout(32); // what is this? iterations
+
+      const link = svg.append("g").selectAll(".link")
+        .data(links)
+        .enter().append("path")
+        .attr("class", "link")
+        .attr("d", path)
+        .style("stroke-width", function (d) {
+          return Math.max(1, d.dy);
+        })
+        .style("stroke", function (d) {
+          return d.source.color = d.source.colorPartido;
+        })
+        // .style("transform=")
+        .sort(function (a, b) {
+          return b.dy - a.dy;
+        });
+
+      link.append("title")
+        .text(function (d) {
+          return d.source.name + " → " + d.target.name + "\n" + format(d.value);
+        });
+      // title is an SVG standard way of providing tooltips, up to the browser how to render this, so changing the style is tricky
+
+      const node = svg.append("g").selectAll(".node")
+        .data(nodes)
+        .enter().append("g")
+        .attr("class", "node")
+        .attr("transform", function (d) {
+
+          let y = d.y + sankey.nodeWidth();
+          if (d.y == 0) {
+            y = d.y - sankey.nodeWidth();
+          }
+
+          return "translate(" + d.x + "," + d.y + ")";
+        });
+
+      node.append("rect")
+        .attr("height", sankey.nodeWidth())
+        .attr("width", function (d) {
+          return d.dy;
+        })
+        .style("fill", function (d) {
+          if (d.colorPartido) {
+            return d.color = d.colorPartido;
+          } else {
+            return d.color = "#dadadc";
+          }
+        })
+        .style("stroke", "#fff")
+        .append("title")
+        .text(function (d) {
+          return d.name + "\n" + format(d.value);
+        });
+
+      node.append("text")
+        .attr("text-anchor", "left")
+        .attr("x", sankey.nodeWidth() * 1.5)
+        .attr("y", (d) => { return -(d.dy / 2) })
+        .attr("dy", ".35em")
+        .attr("transform", "rotate(90)")
+        .text(function (d) {
+          if (d.y > 1)
+           return d.name;
+        })
+        .filter(function (d) {
+          return d.x < width / 2;
+        });
+    });
+  }
+
+}
+
+export default Header;

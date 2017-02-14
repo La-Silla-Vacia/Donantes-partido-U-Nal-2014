@@ -1,0 +1,6 @@
+{
+  "name": "TendenciasWidget",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./TendenciasWidget.jsx"
+}
