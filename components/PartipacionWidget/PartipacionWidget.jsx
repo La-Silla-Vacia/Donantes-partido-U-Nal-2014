@@ -1,12 +1,12 @@
 import React from 'react';
-const d3 = require('d3');
+import d3 from 'd3';
 import sankeyLib from '../Sankey/Sankey.js';
 import Widget from '../Widget';
 import Select from '../Select';
 import Legend from '../Legend';
 import s from './PartipacionWidget.css';
 
-class Header extends React.Component {
+class PartipacionWidget extends React.Component {
 
   constructor() {
     super();
@@ -40,7 +40,7 @@ class Header extends React.Component {
         className={s.select}
         value="Entidades"
         options={this.state.selectOptions}
-        callback={Header.switchOption}
+        callback={PartipacionWidget.switchOption}
       />
     );
 
@@ -291,4 +291,4 @@ class Header extends React.Component {
 
 }
 
-export default Header;
+export default PartipacionWidget;

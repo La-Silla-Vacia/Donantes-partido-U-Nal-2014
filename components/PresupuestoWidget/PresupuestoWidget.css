@@ -1,0 +1,6 @@
+@import "../variables.css";
+
+.node {
+  position: absolute;
+  font-size: .7em;
+}
