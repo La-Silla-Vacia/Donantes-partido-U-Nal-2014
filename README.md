@@ -70,20 +70,7 @@ $ yarn test                     # Run unit tests. Or, `yarn run test:watch`
 ```
 
 
-### How to Deploy
-
-Update `publish` script in the [`tools/publish.js`](tools/publish.js) file with your full Firebase
-project name as found in your [Firebase console](https://console.firebase.google.com/). Note that
-this may have an additional identifier suffix than the shorter name you've provided. Then run: 
-
-```shell
-$ yarn publish                  # Builds and deployes the app to Firebase
-```
-
-The first time you publish, you will be prompted to authenticate with Google and generate an
-authentication token in order for the publish script to continue.
-
-![publish](https://koistya.github.io/files/react-static-boilerplate-publish.gif)
+### How to build
 
 If you need to build the project without publishing it, simply run:
 
