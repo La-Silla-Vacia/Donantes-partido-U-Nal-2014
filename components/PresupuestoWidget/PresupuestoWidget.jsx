@@ -1,5 +1,6 @@
 import React from 'react';
 import d3 from 'd3';
+import Legend from '../Legend';
 import Widget from '../Widget';
 import Select from '../Select';
 import s from './PresupuestoWidget.css';
@@ -33,12 +34,14 @@ class PresupuestoWidget extends React.Component {
   }
 
   componentDidMount() {
+    const self = this;
 
     d3.json("https://rayos-x-al-clientelismo.firebaseio.com/data.json", function (data) {
 
       const children = [];
+      const partidos = [];
 
-      data.map((el) => {
+      data.map((el, index) => {
         const partido = el.partido;
         const presupuesto = el.presupuestoDeInversion;
         if (presupuesto) {
@@ -46,15 +49,24 @@ class PresupuestoWidget extends React.Component {
           let inChildren = false;
           children.map((child) => {
             if (child.partido == partido) {
-              console.log(partido + " " + child.presupuestoDeInversion);
               inChildren = true;
               child.presupuestoDeInversion += Number(presupuesto);
             }
           });
 
+          let inPartidos = false;
+          partidos.map((node) => {
+            if (node.name == partido) inPartidos = true;
+          });
+          if (!inPartidos) {
+            partidos.push({name: partido, colorPartido: el.colorPartido, partidoId: index + 1});
+          }
+
           if (!inChildren) children.push(el);
         }
       });
+
+      self.setState({'partidos': partidos});
 
       const tree = {
         "name": "Album",
@@ -132,6 +144,11 @@ class PresupuestoWidget extends React.Component {
         select={select}
         fullWidth={true}
       >
+
+        <Legend
+          partidos={this.state.partidos}
+          hovering={this.state.hovering}
+        />
 
         <div id="presupuestoChart" className={s.widget} />
 
