@@ -118,14 +118,6 @@ class PresupuestoWidget extends React.Component {
           }
         });
 
-        let inLegendItems = false;
-        legendItems.map((node) => {
-          if (node.name == category) inLegendItems = true;
-        });
-        if (!inLegendItems) {
-        //   legendItems.push({name: category, colorPartido: el.colorPartido, partidoId: index + 1});
-        // }
-
         if (!inChildren) {
           i += 1;
 
@@ -145,11 +137,8 @@ class PresupuestoWidget extends React.Component {
             id: i
           };
 
-          console.log(newEl.id);
-
           children.push(newEl);
           legendItems.push({name: category, colorPartido: color, partidoId: index + 1});
-        }
         }
       }
     });
