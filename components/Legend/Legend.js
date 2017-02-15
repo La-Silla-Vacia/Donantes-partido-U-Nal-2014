@@ -8,10 +8,18 @@ class Legend extends React.Component {
   constructor() {
     super();
 
+    this.state = {
+      partidos: []
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({partidos: nextProps.partidos});
   }
 
   getPartidos() {
-    return this.props.partidos.map((partido, index) => {
+    if (!this.state.partidos) return;
+    return this.state.partidos.map((partido, index) => {
       return (
         <li className={cx(s.item, {[s.item__hover]: (partido.partidoId == this.props.hovering)})}
             key={partido.partidoId}

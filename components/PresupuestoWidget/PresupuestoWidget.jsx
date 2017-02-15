@@ -32,6 +32,8 @@ class PresupuestoWidget extends React.Component {
       formattedData: [],
       nodes: []
     };
+
+    this.createWidget = this.createWidget.bind(this);
   }
 
   static switchOption(e) {
@@ -39,32 +41,28 @@ class PresupuestoWidget extends React.Component {
   }
 
   componentDidMount() {
-    this.getData();
-
+    this.formatData(this.state.data, (data) => {
+      this.createWidget(data);
+    });
     window.addEventListener('resize', this.createWidget.bind(this));
   }
 
-  getData() {
-    fetch('https://rayos-x-al-clientelismo.firebaseio.com/data.json')
-      .then((response) => {
-        return response.json()
-      })
-      .then((json) => {
-        this.setState({data: json});
-        this.formatData(json, () => {this.createWidget()});
-      })
-      .catch((ex) => {
-        console.log('parsing failed', ex)
-      })
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
+    // if (nextProps.data !== this.state.data) {
+      console.log('updateing props');
+      this.setState({data: nextProps.data});
+      this.formatData(nextProps.data, this.createWidget);
+    // }
   }
 
   createWidget() {
     const nodes = [];
-    const formattedData = this.state.formattedData;
-    this.setState({'partidos': formattedData.partidos});
-
+    const data = this.state.formattedData;
+    console.log(this.state.formattedData);
+    this.setState({'partidos': data.partidos});
     const tree = {
-      "children": formattedData.children
+      "children": data.children
     };
 
     const width = window.innerWidth,
@@ -88,7 +86,6 @@ class PresupuestoWidget extends React.Component {
         nodes.push(d);
       })
       .remove();
-
 
     this.setState({nodes});
   }
@@ -123,7 +120,12 @@ class PresupuestoWidget extends React.Component {
     });
 
     this.setState({formattedData: {children, partidos}});
-    if (callback) callback();
+    if (callback) {
+      setTimeout(() => {
+        callback();
+      }, 10);
+
+    }
   }
 
   getPosition() {
