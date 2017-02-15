@@ -41,7 +41,7 @@ class PresupuestoWidget extends React.Component {
       data.map((el) => {
         const partido = el.partido;
         const presupuesto = el.presupuestoDeInversion;
-        if (partido !== 'Sin definir' && presupuesto) {
+        if (presupuesto) {
 
           let inChildren = false;
           children.map((child) => {
@@ -57,14 +57,16 @@ class PresupuestoWidget extends React.Component {
       });
 
       const tree = {
-        "name": "hihi",
+        "name": "Album",
         "children": children
       };
 
-      const width = 1200,
-        height = 600,
+      const width = window.innerWidth,
+        height = window.innerHeight / 3 * 2,
         color = d3.scale.category20c(),
-        div = d3.select("#presupuestoChart").append("div")
+        div = d3.select("#presupuestoChart")
+          .style("height", height + 'px')
+          .append("div")
           .style("position", "relative");
 
       const treemap = d3.layout.treemap()
@@ -82,27 +84,33 @@ class PresupuestoWidget extends React.Component {
         .style("background-color", function (d) {
           return d.partido == 'tree' ? '#fff' : d.colorPartido;
         })
-        .append('div')
+        .append('h3')
+        .attr("class", s.partido)
         .style("font-size", function (d) {
           // compute font size based on sqrt(area)
-          return Math.max(20, 0.18 * Math.sqrt(d.area)) + 'px';
+          return Math.max(20, 0.05 * Math.sqrt(d.area)) + 'px';
         })
         .text(function (d) {
           return d.children ? null : d.partido;
+        })
+        .append('span')
+        .attr("class", s.money)
+        .text(function (d) {
+          return d.children ? null : `${Math.round((d.presupuestoDeInversion / 1000000000))} Mil Millones`;
         });
 
       function position() {
-        this.style("left", function (d) {
+        this.style("right", function (d) {
           return d.x + "px";
         })
           .style("top", function (d) {
             return d.y + "px";
           })
           .style("width", function (d) {
-            return Math.max(0, d.dx - 1) + "px";
+            return Math.max(0, d.dx) + "px";
           })
           .style("height", function (d) {
-            return Math.max(0, d.dy - 1) + "px";
+            return Math.max(0, d.dy) + "px";
           });
       }
     });
@@ -122,9 +130,10 @@ class PresupuestoWidget extends React.Component {
       <Widget
         title="Presupuesto por %s"
         select={select}
+        fullWidth={true}
       >
 
-        <div id="presupuestoChart"/>
+        <div id="presupuestoChart" className={s.widget} />
 
       </Widget>
     );

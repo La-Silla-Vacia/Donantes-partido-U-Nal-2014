@@ -3,4 +3,26 @@
 .node {
   position: absolute;
   font-size: .7em;
+  overflow: hidden;
+  font-family: var(--font-family-display);
+  color: var(--brand-white);
+  padding: 2em;
+  box-sizing: border-box;
+  line-height: 1;
+}
+
+.widget {
+  min-height: 66vh;
+}
+
+.partido {
+  margin-top: 0;
+  font-weight: 500;
+}
+
+.money {
+  display: block;
+  font-size: 2em;
+  font-weight: 100;
+  margin-top: 0.25em;
 }

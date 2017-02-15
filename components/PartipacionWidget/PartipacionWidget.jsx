@@ -102,7 +102,7 @@ class PartipacionWidget extends React.Component {
         const partido = el.partido;
         const presupuesto = el.presupuestoDeInversion;
 
-        if (partido !== "Sin definir" && presupuesto) {
+        if (presupuesto) {
           const entidad = el.entidad;
           let partidoInNodes = false;
           let entidadInNodes = false;

@@ -1,0 +1,13 @@
+.root {
+  height: 10em;
+  position: relative;
+}
+
+.text {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  display: block;
+  top: 50%;
+  transform: translateY(-50%);
+}

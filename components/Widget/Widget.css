@@ -6,6 +6,10 @@
   margin: 0 auto;
 }
 
+.root__full_width {
+  max-width: inherit;
+}
+
 .title {
   font-family: var(--font-family-display);
   font-size: 2em;

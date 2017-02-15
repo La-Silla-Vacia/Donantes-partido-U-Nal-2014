@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import cx from 'classnames';
 import s from './Widget.css';
 
 class Header extends React.Component {
@@ -18,7 +19,7 @@ class Header extends React.Component {
       </h2>);
 
     return (
-      <section className={s.root}>
+      <section className={cx(s.root, {[s.root__full_width]: this.props.fullWidth})}>
         {title}
         {this.props.children}
       </section>

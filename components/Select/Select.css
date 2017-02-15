@@ -92,6 +92,10 @@
   outline: none;
 }
 
+.root__open .option:hover {
+  color: var(--brand-black);
+}
+
 .root__open .option:focus {
   background-color: var(--brand-lightgrey);
   box-shadow: -0.75em 0 var(--brand-lightgrey), 1.75em 0 var(--brand-lightgrey);
