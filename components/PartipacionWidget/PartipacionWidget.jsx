@@ -25,7 +25,7 @@ class PartipacionWidget extends React.Component {
           value: "entidades"
         }
       ],
-      partidos: [],
+      legendItems: [],
       hovering: false
     };
   }
@@ -51,7 +51,7 @@ class PartipacionWidget extends React.Component {
       >
 
         <Legend
-          partidos={this.state.partidos}
+          items={this.state.legendItems}
           hovering={this.state.hovering}
         />
 
@@ -150,7 +150,7 @@ class PartipacionWidget extends React.Component {
         if (node.partidoId) partidos.push(node);
       });
 
-      self.setState({partidos});
+      self.setState({legendItems: partidos});
 
       sankey
         .nodes(nodes)

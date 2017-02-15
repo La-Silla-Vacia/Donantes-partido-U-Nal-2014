@@ -14,19 +14,20 @@ class PresupuestoWidget extends React.Component {
     this.state = {
       selectOptions: [
         {
-          label: "Partido Pólitico",
+          label: "Partido Póliticos",
           value: "partidoPolitico",
         },
         {
-          label: "Departemento",
+          label: "Departementos",
           value: "departemento"
         },
         {
-          label: "Entidade",
+          label: "Entidades",
           value: "entidade"
         }
       ],
-      partidos: [],
+      viewType: "partidoPolitico",
+      legendItems: [],
       hovering: false,
       data: [],
       formattedData: [],
@@ -34,33 +35,32 @@ class PresupuestoWidget extends React.Component {
     };
 
     this.createWidget = this.createWidget.bind(this);
+    this.switchOption = this.switchOption.bind(this);
   }
 
-  static switchOption(e) {
+  switchOption(e) {
     console.log(e);
+    this.setState({viewType: e.value});
+    setTimeout(() => {
+      this.formatData(this.state.data);
+    }, 10);
   }
 
   componentDidMount() {
-    this.formatData(this.state.data, (data) => {
-      this.createWidget(data);
-    });
+    this.formatData(this.state.data);
     window.addEventListener('resize', this.createWidget.bind(this));
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
-    // if (nextProps.data !== this.state.data) {
-      console.log('updateing props');
-      this.setState({data: nextProps.data});
-      this.formatData(nextProps.data, this.createWidget);
-    // }
+    this.setState({data: nextProps.data});
+    this.formatData(nextProps.data);
   }
 
   createWidget() {
     const nodes = [];
     const data = this.state.formattedData;
-    console.log(this.state.formattedData);
-    this.setState({'partidos': data.partidos});
+    this.setState({'legendItems': data.legendItems});
+
     const tree = {
       "children": data.children
     };
@@ -90,42 +90,59 @@ class PresupuestoWidget extends React.Component {
     this.setState({nodes});
   }
 
-  formatData(data, callback) {
+  formatData(data) {
     const children = [];
-    const partidos = [];
+    const legendItems = [];
+
+    const sortBy = this.state.viewType;
 
     data.map((el, index) => {
-      const partido = el.partido;
+      let category = el.partido;
+      if (sortBy == "departemento") {
+        category = el.departamento;
+      } else if (sortBy == "entidade") {
+        category = el.entidad
+      }
+
       const presupuesto = el.presupuestoDeInversion;
+
+      // only continue if there is money involved
       if (presupuesto) {
 
         let inChildren = false;
         children.map((child) => {
-          if (child.partido == partido) {
+          if (child.categoryName == category) {
             inChildren = true;
             child.presupuestoDeInversion += Number(presupuesto);
           }
         });
 
-        let inPartidos = false;
-        partidos.map((node) => {
-          if (node.name == partido) inPartidos = true;
+        let inLegendItems = false;
+        legendItems.map((node) => {
+          if (node.name == category) inLegendItems = true;
         });
-        if (!inPartidos) {
-          partidos.push({name: partido, colorPartido: el.colorPartido, partidoId: index + 1});
+        if (!inLegendItems) {
+          legendItems.push({name: category, colorPartido: el.colorPartido, partidoId: index + 1});
         }
 
-        if (!inChildren) children.push(el);
+        const newEl = {
+          partido: el.partido,
+          categoryName: category,
+          colorPartido: el.colorPartido,
+          departemento: el.departemento,
+          presupuestoDeInversion: el.presupuestoDeInversion
+        };
+
+        if (!inChildren) children.push(newEl);
       }
     });
 
-    this.setState({formattedData: {children, partidos}});
-    if (callback) {
-      setTimeout(() => {
-        callback();
-      }, 10);
+    console.log(children);
 
-    }
+    this.setState({formattedData: {children, legendItems}});
+    setTimeout(() => {
+      this.createWidget();
+    }, 10);
   }
 
   getPosition() {
@@ -151,7 +168,7 @@ class PresupuestoWidget extends React.Component {
       const amoundOfMoney = Math.round(node.presupuestoDeInversion / 1000000000);
 
       let hide = false;
-      if (node.dx < 200 || node.dy < 200) hide = true;
+      if (node.dx < 200 || node.dy < 150) hide = true;
       return (
         <div className={s.node} key={index} style={{
           backgroundColor: backgroundColor,
@@ -161,7 +178,7 @@ class PresupuestoWidget extends React.Component {
           right: node.x,
           top: node.y,
         }}>
-          <h3 className={cx(s.partido, {[s.partido__hidden]: hide})}>{node.partido}</h3>
+          <h3 className={cx(s.partido)}>{node.categoryName}</h3>
           <span className={cx(s.money, {[s.money__hidden]: hide})}>{amoundOfMoney} Mil Millones</span>
         </div>
       )
@@ -172,9 +189,9 @@ class PresupuestoWidget extends React.Component {
     const select = (
       <Select
         className={s.select}
-        value="Entidades"
+        value="Partido Pólitico"
         options={this.state.selectOptions}
-        callback={PresupuestoWidget.switchOption}
+        callback={this.switchOption}
       />
     );
 
@@ -189,7 +206,7 @@ class PresupuestoWidget extends React.Component {
       >
 
         <Legend
-          partidos={this.state.partidos}
+          items={this.state.legendItems}
           hovering={this.state.hovering}
         />
 

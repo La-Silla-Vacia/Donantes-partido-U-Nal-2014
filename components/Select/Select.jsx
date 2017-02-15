@@ -49,8 +49,7 @@ class Select extends React.Component {
     }
 
     this.state.options = newOptions;
-    this.setState({open: false})
-    console.log(this.state.open);
+    this.setState({open: false});
   }
 
   componentWillMount() {
