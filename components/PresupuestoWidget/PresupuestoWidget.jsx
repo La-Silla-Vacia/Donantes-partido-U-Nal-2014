@@ -1,5 +1,7 @@
 import React from 'react';
 import d3 from 'd3';
+import cx from 'classnames';
+import 'whatwg-fetch';
 import Legend from '../Legend';
 import Widget from '../Widget';
 import Select from '../Select';
@@ -25,7 +27,10 @@ class PresupuestoWidget extends React.Component {
         }
       ],
       partidos: [],
-      hovering: false
+      hovering: false,
+      data: [],
+      formattedData: [],
+      nodes: []
     };
   }
 
@@ -34,97 +39,130 @@ class PresupuestoWidget extends React.Component {
   }
 
   componentDidMount() {
-    const self = this;
+    this.getData();
 
-    d3.json("https://rayos-x-al-clientelismo.firebaseio.com/data.json", function (data) {
+    window.addEventListener('resize', this.createWidget.bind(this));
+  }
 
-      const children = [];
-      const partidos = [];
+  getData() {
+    fetch('https://rayos-x-al-clientelismo.firebaseio.com/data.json')
+      .then((response) => {
+        return response.json()
+      })
+      .then((json) => {
+        this.setState({data: json});
+        this.formatData(json, () => {this.createWidget()});
+      })
+      .catch((ex) => {
+        console.log('parsing failed', ex)
+      })
+  }
 
-      data.map((el, index) => {
-        const partido = el.partido;
-        const presupuesto = el.presupuestoDeInversion;
-        if (presupuesto) {
+  createWidget() {
+    const nodes = [];
+    const formattedData = this.state.formattedData;
+    this.setState({'partidos': formattedData.partidos});
 
-          let inChildren = false;
-          children.map((child) => {
-            if (child.partido == partido) {
-              inChildren = true;
-              child.presupuestoDeInversion += Number(presupuesto);
-            }
-          });
+    const tree = {
+      "children": formattedData.children
+    };
 
-          let inPartidos = false;
-          partidos.map((node) => {
-            if (node.name == partido) inPartidos = true;
-          });
-          if (!inPartidos) {
-            partidos.push({name: partido, colorPartido: el.colorPartido, partidoId: index + 1});
-          }
+    const width = window.innerWidth,
+      height = window.innerHeight / 3 * 2,
+      div = d3.select("#presupuestoChart")
+        .style("height", height + 'px');
 
-          if (!inChildren) children.push(el);
-        }
+    const treemap = d3.layout.treemap()
+      .size([width, height])
+      .sticky(true)
+      .value(function (d) {
+        return d.presupuestoDeInversion;
       });
 
-      self.setState({'partidos': partidos});
+    const node = div.datum(tree).selectAll(".node")
+      .data(treemap.nodes)
+      .enter()
+      .append("div")
+      .call(this.getPosition)
+      .text((d) => {
+        nodes.push(d);
+      })
+      .remove();
 
-      const tree = {
-        "name": "Album",
-        "children": children
-      };
 
-      const width = window.innerWidth,
-        height = window.innerHeight / 3 * 2,
-        color = d3.scale.category20c(),
-        div = d3.select("#presupuestoChart")
-          .style("height", height + 'px')
-          .append("div")
-          .style("position", "relative");
+    this.setState({nodes});
+  }
 
-      const treemap = d3.layout.treemap()
-        .size([width, height])
-        .sticky(true)
-        .value(function (d) {
-          return d.presupuestoDeInversion;
+  formatData(data, callback) {
+    const children = [];
+    const partidos = [];
+
+    data.map((el, index) => {
+      const partido = el.partido;
+      const presupuesto = el.presupuestoDeInversion;
+      if (presupuesto) {
+
+        let inChildren = false;
+        children.map((child) => {
+          if (child.partido == partido) {
+            inChildren = true;
+            child.presupuestoDeInversion += Number(presupuesto);
+          }
         });
 
-      const node = div.datum(tree).selectAll(".node")
-        .data(treemap.nodes)
-        .enter().append("div")
-        .attr("class", s.node)
-        .call(position)
-        .style("background-color", function (d) {
-          return d.partido == 'tree' ? '#fff' : d.colorPartido;
-        })
-        .append('h3')
-        .attr("class", s.partido)
-        .style("font-size", function (d) {
-          // compute font size based on sqrt(area)
-          return Math.max(20, 0.05 * Math.sqrt(d.area)) + 'px';
-        })
-        .text(function (d) {
-          return d.children ? null : d.partido;
-        })
-        .append('span')
-        .attr("class", s.money)
-        .text(function (d) {
-          return d.children ? null : `${Math.round((d.presupuestoDeInversion / 1000000000))} Mil Millones`;
+        let inPartidos = false;
+        partidos.map((node) => {
+          if (node.name == partido) inPartidos = true;
         });
+        if (!inPartidos) {
+          partidos.push({name: partido, colorPartido: el.colorPartido, partidoId: index + 1});
+        }
 
-      function position() {
-        this.style("right", function (d) {
-          return d.x + "px";
-        })
-          .style("top", function (d) {
-            return d.y + "px";
-          })
-          .style("width", function (d) {
-            return Math.max(0, d.dx) + "px";
-          })
-          .style("height", function (d) {
-            return Math.max(0, d.dy) + "px";
-          });
+        if (!inChildren) children.push(el);
       }
+    });
+
+    this.setState({formattedData: {children, partidos}});
+    if (callback) callback();
+  }
+
+  getPosition() {
+    this.style("right", (d) => {
+      return d.x + "px";
+    })
+      .style("top", (d) => {
+        return d.y + "px";
+      })
+      .style("width", (d) => {
+        return Math.max(0, d.dx) + "px";
+      })
+      .style("height", (d) => {
+        return Math.max(0, d.dy) + "px";
+      });
+  }
+
+  getNodes() {
+    return this.state.nodes.map((node, index) => {
+      let backgroundColor = node.colorPartido;
+      if (!backgroundColor) backgroundColor = "#44a5db";
+      const fontSize = Math.max(20, 0.05 * Math.sqrt(node.area)) + 'px';
+      const amoundOfMoney = Math.round(node.presupuestoDeInversion / 1000000000);
+
+      let hide = false;
+      if (node.dx < 200 || node.dy < 200) hide = true;
+      return (
+        <div className={s.node} key={index} style={{
+          backgroundColor: backgroundColor,
+          fontSize: fontSize,
+          height: node.dy,
+          width: node.dx,
+          right: node.x,
+          top: node.y,
+        }}>
+          <h3 className={cx(s.partido, {[s.partido__hidden]: hide})}>{node.partido}</h3>
+          <span className={cx(s.money, {[s.money__hidden]: hide})}>{amoundOfMoney} Mil Millones</span>
+        </div>
+      )
     });
   }
 
@@ -138,6 +176,9 @@ class PresupuestoWidget extends React.Component {
       />
     );
 
+    let nodes;
+    if (this.state.nodes.length) nodes = this.getNodes();
+
     return (
       <Widget
         title="Presupuesto por %s"
@@ -150,7 +191,7 @@ class PresupuestoWidget extends React.Component {
           hovering={this.state.hovering}
         />
 
-        <div id="presupuestoChart" className={s.widget} />
+        <div id="presupuestoChart" className={s.widget}>{nodes}</div>
 
       </Widget>
     );

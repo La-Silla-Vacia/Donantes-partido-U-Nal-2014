@@ -2,22 +2,28 @@
 
 .node {
   position: absolute;
-  font-size: .7em;
   overflow: hidden;
   font-family: var(--font-family-display);
   color: var(--brand-white);
-  padding: 2em;
+  padding: 2rem;
   box-sizing: border-box;
   line-height: 1;
+  background-color: var(--brand-color);
 }
 
 .widget {
   min-height: 66vh;
+  position: relative;
 }
 
 .partido {
   margin-top: 0;
   font-weight: 500;
+  font-size: .7em;
+}
+
+.partido__hidden {
+  opacity: 0;
 }
 
 .money {
@@ -25,4 +31,8 @@
   font-size: 2em;
   font-weight: 100;
   margin-top: 0.25em;
+}
+
+.money__hidden {
+  opacity: 0;
 }
