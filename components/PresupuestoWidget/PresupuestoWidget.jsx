@@ -93,6 +93,7 @@ class PresupuestoWidget extends React.Component {
   formatData(data) {
     const children = [];
     const legendItems = [];
+    let i = 0;
 
     const sortBy = this.state.viewType;
 
@@ -122,22 +123,36 @@ class PresupuestoWidget extends React.Component {
           if (node.name == category) inLegendItems = true;
         });
         if (!inLegendItems) {
-          legendItems.push({name: category, colorPartido: el.colorPartido, partidoId: index + 1});
+        //   legendItems.push({name: category, colorPartido: el.colorPartido, partidoId: index + 1});
+        // }
+
+        if (!inChildren) {
+          i += 1;
+
+          let color = el.colorPartido;
+          if (sortBy == "entidade") {
+            color = this.shadeColor("#cd2851", -(i * 3));
+          } else if (sortBy == "departemento") {
+            color = this.shadeColor("#44a5db", -(i * 3));
+          }
+
+          const newEl = {
+            partido: el.partido,
+            categoryName: category,
+            color: color,
+            departemento: el.departemento,
+            presupuestoDeInversion: el.presupuestoDeInversion,
+            id: i
+          };
+
+          console.log(newEl.id);
+
+          children.push(newEl);
+          legendItems.push({name: category, colorPartido: color, partidoId: index + 1});
         }
-
-        const newEl = {
-          partido: el.partido,
-          categoryName: category,
-          colorPartido: el.colorPartido,
-          departemento: el.departemento,
-          presupuestoDeInversion: el.presupuestoDeInversion
-        };
-
-        if (!inChildren) children.push(newEl);
+        }
       }
     });
-
-    console.log(children);
 
     this.setState({formattedData: {children, legendItems}});
     setTimeout(() => {
@@ -162,8 +177,11 @@ class PresupuestoWidget extends React.Component {
 
   getNodes() {
     return this.state.nodes.map((node, index) => {
-      let backgroundColor = node.colorPartido;
-      if (!backgroundColor) backgroundColor = "#44a5db";
+      // let backgroundColor = node.color;
+      // if (!backgroundColor) backgroundColor = "#44a5db";
+
+      let backgroundColor = node.color;
+
       const fontSize = Math.max(20, 0.05 * Math.sqrt(node.area)) + 'px';
       const amoundOfMoney = Math.round(node.presupuestoDeInversion / 1000000000);
 
@@ -214,6 +232,27 @@ class PresupuestoWidget extends React.Component {
 
       </Widget>
     );
+  }
+
+  shadeColor(color, percent) {
+
+    var R = parseInt(color.substring(1,3),16);
+    var G = parseInt(color.substring(3,5),16);
+    var B = parseInt(color.substring(5,7),16);
+
+    R = parseInt(R * (100 + percent) / 100);
+    G = parseInt(G * (100 + percent) / 100);
+    B = parseInt(B * (100 + percent) / 100);
+
+    R = (R<255)?R:255;
+    G = (G<255)?G:255;
+    B = (B<255)?B:255;
+
+    var RR = ((R.toString(16).length==1)?"0"+R.toString(16):R.toString(16));
+    var GG = ((G.toString(16).length==1)?"0"+G.toString(16):G.toString(16));
+    var BB = ((B.toString(16).length==1)?"0"+B.toString(16):B.toString(16));
+
+    return "#"+RR+GG+BB;
   }
 
 }
