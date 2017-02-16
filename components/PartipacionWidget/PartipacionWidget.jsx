@@ -53,7 +53,7 @@ class PartipacionWidget extends React.Component {
         color: item.source.colorPartido,
         sourceName: item.source.name,
         targetName: item.target.name,
-        value: item.theValue,
+        value: item.value,
         hoverCallback: this.getHoverItem,
         index
       };
@@ -87,23 +87,30 @@ class PartipacionWidget extends React.Component {
 
   getHoverNode(type, id) {
     const activeNodes = [id];
+    let value = 0;
+    let title = "";
 
     this.state.nodes.map((node) => {
       if (node.nodeId == id) {
+        title = node.name;
         if (type == "partido") {
           node.sourceLinks.map((link) => {
             activeNodes.push(link.target.nodeId);
+            value += link.value;
           })
         } else {
           node.targetLinks.map((link) => {
             activeNodes.push(link.source.nodeId);
+            value += link.value;
           })
         }
       }
     });
 
     this.setState({nodeActive: activeNodes});
-    this.setState({madeActiveBy: "node"})
+    this.setState({madeActiveBy: "node"});
+    this.setState({activeText: title});
+    this.setState({activeAmount: this.formatCurrency(value)});
   }
 
   getHoverLegend(id) {
@@ -174,9 +181,11 @@ class PartipacionWidget extends React.Component {
     );
   }
 
-  componentDidMount() {
-    const self = this;
+  componentWillReceiveProps(nextProps) {
+    this.createWidget(nextProps.data);
+  }
 
+  createWidget(data) {
     d3.sankey = sankeyLib;
     const chart = document.querySelector('#chart');
     const chartWidth = 1200;
@@ -197,99 +206,96 @@ class PartipacionWidget extends React.Component {
 
     const path = sankey.link();
 
-    d3.json("https://rayos-x-al-clientelismo.firebaseio.com/data.json", function (energy) {
+    const partidos = [];
+    const nodes = [];
+    const links = [];
 
-      const partidos = [];
-      const nodes = [];
-      const links = [];
+    const items = [];
+    const nodeEls = [];
 
-      const items = [];
-      const nodeEls = [];
+    data.map((el) => {
+      const partido = el.partido;
+      const presupuesto = el.presupuestoDeInversion;
 
-      energy.map((el) => {
-        const partido = el.partido;
-        const presupuesto = el.presupuestoDeInversion;
-
-        if (presupuesto) {
-          const entidad = el.entidad;
-          let partidoInNodes = false;
-          let entidadInNodes = false;
-          nodes.map((node) => {
-            if (node.name == partido) partidoInNodes = true;
-            if (node.name == entidad) entidadInNodes = true;
-          });
-          if (!partidoInNodes) {
-            nodes.push({name: partido, colorPartido: el.colorPartido});
-          }
-          if (!entidadInNodes) nodes.push({name: entidad});
-
-          let partidoIndex = 0;
-          let entidadIndex = 0;
-          nodes.map((node, index) => {
-            node.nodeId = index + 1;
-            if (node.name == partido) {
-              node.type = "partido";
-              partidoIndex = index;
-            }
-            if (node.name == entidad) {
-              entidadIndex = index;
-            }
-            node.presupuesto = presupuesto;
-          });
-
-          let linkInLinks = false;
-          const value = presupuesto / 1000;
-          const result = {"source": partidoIndex, "target": entidadIndex, "value": value, "theValue": value};
-
-          links.map((link) => {
-            if (link.source === partidoIndex && link.target === entidadIndex) {
-              link.value += value;
-              linkInLinks = true;
-            }
-          });
-
-          if (!linkInLinks) links.push(result);
+      if (presupuesto) {
+        const entidad = el.entidad;
+        let partidoInNodes = false;
+        let entidadInNodes = false;
+        nodes.map((node) => {
+          if (node.name == partido) partidoInNodes = true;
+          if (node.name == entidad) entidadInNodes = true;
+        });
+        if (!partidoInNodes) {
+          nodes.push({name: partido, colorPartido: el.colorPartido});
         }
-      });
+        if (!entidadInNodes) nodes.push({name: entidad});
 
-      nodes.map((node) => {
-        if (node.type == "partido") partidos.push(node);
-      });
-
-      self.setState({legendItems: partidos});
-
-      sankey
-        .nodes(nodes)
-        .links(links)
-        .layout(32); // what is this? iterations
-
-      const link = svg.append("g").selectAll(".link")
-        .data(links)
-        .enter()
-        .append("path")
-        .sort(function (a, b) {
-          return b.dy - a.dy;
-        })
-        .text((d) => {
-          const item = d;
-          item.path = path(d);
-          items.push(item);
-        })
-        .remove();
-      self.setState({items});
-
-      const node = svg.append("g").selectAll(".node")
-        .data(nodes)
-        .enter()
-        .append("g")
-        .text((d) => {
-          const item = d;
-          item.width = d.dy;
-          nodeEls.push(item);
+        let partidoIndex = 0;
+        let entidadIndex = 0;
+        nodes.map((node, index) => {
+          node.nodeId = index + 1;
+          if (node.name == partido) {
+            node.type = "partido";
+            partidoIndex = index;
+          }
+          if (node.name == entidad) {
+            entidadIndex = index;
+          }
+          node.presupuesto = presupuesto;
         });
 
-      self.setState({nodes: nodeEls});
+        let linkInLinks = false;
+        const value = presupuesto / 1000;
+        const result = {"source": partidoIndex, "target": entidadIndex, "value": value, "theValue": value};
+
+        links.map((link) => {
+          if (link.source === partidoIndex && link.target === entidadIndex) {
+            link.value += value;
+            linkInLinks = true;
+          }
+        });
+
+        if (!linkInLinks) links.push(result);
+      }
     });
+
+    nodes.map((node) => {
+      if (node.type == "partido") partidos.push(node);
+    });
+
+    this.setState({legendItems: partidos});
+
+    sankey
+      .nodes(nodes)
+      .links(links)
+      .layout(32); // what is this? iterations
+
+    const link = svg.append("g").selectAll(".link")
+      .data(links)
+      .enter()
+      .append("path")
+      .sort(function (a, b) {
+        return b.dy - a.dy;
+      })
+      .text((d) => {
+        const item = d;
+        item.path = path(d);
+        items.push(item);
+      })
+      .remove();
+    this.setState({items});
+
+    const node = svg.append("g").selectAll(".node")
+      .data(nodes)
+      .enter()
+      .append("g")
+      .text((d) => {
+        const item = d;
+        item.width = d.dy;
+        nodeEls.push(item);
+      });
+
+    this.setState({nodes: nodeEls});
   }
 
   formatCurrency(x) {
