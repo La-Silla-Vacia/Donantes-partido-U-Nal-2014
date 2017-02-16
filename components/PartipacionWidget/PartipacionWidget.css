@@ -1,14 +1,88 @@
 @import "../variables.css";
 
-.select {
-  display: inline-block;
-  width: 8em;
-  font-size: .8em;
-  font-weight: 400;
-  font-family: var(--font-family-base);
-  -webkit-transform: translateY(25%);
-  -moz-transform: translateY(25%);
-  -ms-transform: translateY(25%);
-  -o-transform: translateY(25%);
-  transform: translateY(25%);
+.chart {
+  overflow: visible !important;
+}
+
+.chartRoot {
+  position: relative;
+}
+
+.link {
+  fill: none;
+  stroke-opacity: .4;
+  transition: stroke-opacity var(--transition-duration);
+}
+
+.link__hover {
+  fill: none;
+}
+
+.link:hover, .link--active {
+  stroke-opacity: .8;
+}
+
+.node rect {
+  fill: var(--brand-black);
+  fill-opacity: .2;
+  shape-rendering: crispEdges;
+  transition: fill-opacity var(--transition-duration);
+  /*stroke-width: 10;*/
+}
+
+.node text {
+  opacity: .35;
+  transition: opacity var(--transition-duration);
+}
+
+.node__active rect {
+  fill-opacity: 1;
+}
+
+.node__active text {
+  opacity: 1;
+}
+
+.mask {
+  pointer-events: none;
+}
+
+.maskLayer {
+  transition: 1s;
+  width: 300%;
+}
+
+.text {
+  position: relative;
+  z-index: 10;
+  opacity: 0;
+  transition: 0.2s;
+}
+
+.text__active {
+  opacity: 1;
+}
+
+.textBox {
+  background-color: #fff;
+  height: 6em;
+  width: 24em;
+  position: absolute;
+  top: 35%;
+  left: 50%;
+  transform: translateY(-50%) translateX(-50%);
+  box-shadow: 0 0 7em rgba(0,0,0,.1);
+  padding: 1em 2em;
+  text-align: center;
+}
+
+.activeText,
+.activeAmount {
+  display: block;
+  font-size: 1.25em;
+  margin-top: 0.4em;
+}
+
+.activeAmount {
+  font-weight: bold;
 }

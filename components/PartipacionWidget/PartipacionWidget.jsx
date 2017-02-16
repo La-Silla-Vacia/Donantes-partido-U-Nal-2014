@@ -4,6 +4,8 @@ import sankeyLib from '../Sankey/Sankey.js';
 import Widget from '../Widget';
 import Select from '../Select';
 import Legend from '../Legend';
+import Item from './Item.jsx';
+import Node from './Node.jsx';
 import s from './PartipacionWidget.css';
 
 class PartipacionWidget extends React.Component {
@@ -26,12 +28,102 @@ class PartipacionWidget extends React.Component {
         }
       ],
       legendItems: [],
-      hovering: false
+      hovering: false,
+      items: [],
+      nodes: [],
+      nodeActive: [],
+      activeText: "Hoi"
     };
+
+    this.getHoverItem = this.getHoverItem.bind(this);
+    this.getHoverNode = this.getHoverNode.bind(this);
+    this.getHoverLegend = this.getHoverLegend.bind(this);
   }
 
   static switchOption(e) {
     console.log(e);
+  }
+
+  getItems() {
+    return this.state.items.map((item, index) => {
+      const strokeWidth = Math.max(1, item.dy);
+      const data = {
+        path: item.path,
+        strokeWidth,
+        color: item.source.colorPartido,
+        sourceName: item.source.name,
+        targetName: item.target.name,
+        value: item.theValue,
+        hoverCallback: this.getHoverItem,
+        index
+      };
+
+      const sourceId = item.source.nodeId;
+      const entidadId = item.source.nodeId;
+
+      if ((
+        this.state.nodeActive.indexOf(sourceId) !== -1 ||
+        this.state.nodeActive.indexOf(entidadId) !== -1) &&
+        this.state.madeActiveBy == "node") {
+        data.active = true;
+      }
+
+      return (
+        <Item key={index} {...data} />
+      )
+    });
+  }
+
+  getHoverItem(index) {
+    const item = this.state.items[index];
+    const text = `${item.source.name} → ${item.target.name}`;
+    const amount = this.formatCurrency(item.theValue);
+    this.setState({activeText: text});
+    this.setState({activeAmount: amount});
+
+    this.setState({nodeActive: [item.source.nodeId, item.target.nodeId]});
+    this.setState({madeActiveBy: "item"})
+  }
+
+  getHoverNode(type, id) {
+    const activeNodes = [id];
+
+    this.state.nodes.map((node) => {
+      if (node.nodeId == id) {
+        if (type == "partido") {
+          node.sourceLinks.map((link) => {
+            activeNodes.push(link.target.nodeId);
+          })
+        } else {
+          node.targetLinks.map((link) => {
+            activeNodes.push(link.source.nodeId);
+          })
+        }
+      }
+    });
+
+    this.setState({nodeActive: activeNodes});
+    this.setState({madeActiveBy: "node"})
+  }
+
+  getHoverLegend(id) {
+    this.setState({nodeActive: [id]})
+  }
+
+  getNodes() {
+    return this.state.nodes.map((item, index) => {
+      const data = item;
+      data.active = false;
+      data.hoverCallback = this.getHoverNode;
+
+      if (this.state.nodeActive.indexOf(data.nodeId) !== -1 ||
+        this.state.nodeActive.indexOf(data.nodeId) !== -1) {
+        data.active = true;
+      }
+      return (
+        <Node key={index} {...data} />
+      )
+    });
   }
 
   render() {
@@ -44,6 +136,9 @@ class PartipacionWidget extends React.Component {
       />
     );
 
+    const items = this.getItems();
+    const nodes = this.getNodes();
+
     return (
       <Widget
         title="Partipación de los Partidos Póliticos en %s"
@@ -52,10 +147,28 @@ class PartipacionWidget extends React.Component {
 
         <Legend
           items={this.state.legendItems}
-          hovering={this.state.hovering}
+          hovering={this.state.nodeActive}
+          hoverCallback={this.getHoverLegend}
         />
 
-        <div id="chart"></div>
+        <div id="chart" hidden></div>
+
+        <div className={s.chartRoot}>
+          <svg className={s.chart} width="1200" height="1000">
+            <g transform="translate(1,10)">
+              <g>
+                { items }
+              </g>
+              <g>
+                { nodes }
+              </g>
+            </g>
+          </svg>
+          <div className={s.textBox}>
+            <span className={s.activeText}>{this.state.activeText}</span>
+            <span className={s.activeAmount}>{this.state.activeAmount}</span>
+          </div>
+        </div>
 
       </Widget>
     );
@@ -68,22 +181,14 @@ class PartipacionWidget extends React.Component {
     const chart = document.querySelector('#chart');
     const chartWidth = 1200;
 
-    const margin = {top: 10, right: 1, bottom: 6, left: 1},
-      width = chartWidth - margin.left - margin.right, // was 960
+    const width = chartWidth, // was 960
       //height = 1500 - margin.top - margin.bottom; // was 500
       height = 650; // UBS Example
 
-    const formatNumber = d3.format(",.0f"),
-      format = function (d) {
-        return formatNumber(d / 1000).replace(",", ".") + " millones";
-      },
-      color = d3.scale.category20();
-
     const svg = d3.select("#chart").append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+      .attr("width", width)
+      .attr("height", height)
+      .append("g");
 
     const sankey = d3.sankey()
       .nodeWidth(20) // was 15
@@ -97,6 +202,9 @@ class PartipacionWidget extends React.Component {
       const partidos = [];
       const nodes = [];
       const links = [];
+
+      const items = [];
+      const nodeEls = [];
 
       energy.map((el) => {
         const partido = el.partido;
@@ -118,36 +226,34 @@ class PartipacionWidget extends React.Component {
           let partidoIndex = 0;
           let entidadIndex = 0;
           nodes.map((node, index) => {
+            node.nodeId = index + 1;
             if (node.name == partido) {
-              node.partidoId = index + 1;
+              node.type = "partido";
               partidoIndex = index;
             }
             if (node.name == entidad) {
-              node.entidadId = index + 1;
               entidadIndex = index;
+            }
+            node.presupuesto = presupuesto;
+          });
+
+          let linkInLinks = false;
+          const value = presupuesto / 1000;
+          const result = {"source": partidoIndex, "target": entidadIndex, "value": value, "theValue": value};
+
+          links.map((link) => {
+            if (link.source === partidoIndex && link.target === entidadIndex) {
+              link.value += value;
+              linkInLinks = true;
             }
           });
 
-          if (presupuesto) {
-            let linkInLinks = false;
-            const value = presupuesto / 1000;
-            const result = {"source": partidoIndex, "target": entidadIndex, "value": value};
-
-            links.map((link) => {
-              if (link.source === partidoIndex && link.target === entidadIndex) {
-                link.value += value;
-                linkInLinks = true;
-              }
-            });
-
-            if (!linkInLinks) links.push(result);
-          }
+          if (!linkInLinks) links.push(result);
         }
       });
 
-
       nodes.map((node) => {
-        if (node.partidoId) partidos.push(node);
+        if (node.type == "partido") partidos.push(node);
       });
 
       self.setState({legendItems: partidos});
@@ -159,134 +265,36 @@ class PartipacionWidget extends React.Component {
 
       const link = svg.append("g").selectAll(".link")
         .data(links)
-        .enter().append("path")
-        .attr("class", function (d) {
-          return `link link--entidad-${d.target.entidadId} link--partido-${d.source.partidoId}`
-        })
-        .attr("d", path)
-        .style("stroke-width", function (d) {
-          return Math.max(1, d.dy);
-        })
-        .style("stroke", function (d) {
-          return d.source.color = d.source.colorPartido;
-        })
-        // .style("transform=")
+        .enter()
+        .append("path")
         .sort(function (a, b) {
           return b.dy - a.dy;
-        });
-
-      link.on('mouseenter', (el) => {
-        self.setState({'hovering': el.source.partidoId});
-        const partidoClass = ".node--partido-" + el.source.partidoId;
-        const entidadClass = ".node--entidad-" + el.target.entidadId;
-        document.querySelector(partidoClass).classList.add('node--active');
-        document.querySelector(entidadClass).classList.add('node--active');
-      });
-
-      link.on('mouseleave', (el) => {
-        self.setState({'hovering': false});
-        const partidoClass = ".node--partido-" + el.source.partidoId;
-        const entidadClass = ".node--entidad-" + el.target.entidadId;
-        document.querySelector(partidoClass).classList.remove('node--active');
-        document.querySelector(entidadClass).classList.remove('node--active');
-      });
-
-      link.append("title")
-        .text(function (d) {
-          return d.source.name + " → " + d.target.name + "\n" + format(d.value);
-        });
-      // title is an SVG standard way of providing tooltips, up to the browser how to render this, so changing the style is tricky
+        })
+        .text((d) => {
+          const item = d;
+          item.path = path(d);
+          items.push(item);
+        })
+        .remove();
+      self.setState({items});
 
       const node = svg.append("g").selectAll(".node")
         .data(nodes)
-        .enter().append("g")
-        .attr("class", function (d) {
-          if (d.entidadId) {
-            return "node node--entidad-" + d.entidadId;
-          } else {
-            return "node node--partido-" + d.partidoId;
-          }
-        })
-        .attr("transform", function (d) {
-
-          let y = d.y + sankey.nodeWidth();
-          if (d.y == 0) {
-            y = d.y - sankey.nodeWidth();
-          }
-
-          return "translate(" + d.x + "," + d.y + ")";
+        .enter()
+        .append("g")
+        .text((d) => {
+          const item = d;
+          item.width = d.dy;
+          nodeEls.push(item);
         });
 
-      node.on('mouseenter', (el) => {
-        if (el.partidoId) {
-          const id = el.partidoId;
-          document.querySelector('.node--partido-' + id).classList.add('node--active');
-          const links = document.querySelectorAll('.link--partido-' + id);
-          for (let i = 0; i < links.length; i++) {
-            links[i].classList.add("link--active");
-          }
-        } else {
-          const id = el.entidadId;
-          document.querySelector('.node--entidad-' + id).classList.add('node--active');
-          const links = document.querySelectorAll('.link--entidad-' + id);
-          for (let i = 0; i < links.length; i++) {
-            links[i].classList.add("link--active");
-          }
-        }
-      });
-
-      node.on('mouseleave', (el) => {
-        if (el.partidoId) {
-          const id = el.partidoId;
-          document.querySelector('.node--partido-' + id).classList.remove('node--active');
-          const links = document.querySelectorAll('.link--partido-' + id);
-          for (let i = 0; i < links.length; i++) {
-            links[i].classList.remove("link--active");
-          }
-        } else {
-          const id = el.entidadId;
-          document.querySelector('.node--entidad-' + id).classList.remove('node--active');
-          const links = document.querySelectorAll('.link--entidad-' + id);
-          for (let i = 0; i < links.length; i++) {
-            links[i].classList.remove("link--active");
-          }
-        }
-      });
-
-      node.append("rect")
-        .attr("height", sankey.nodeWidth())
-        .attr("width", function (d) {
-          return d.dy;
-        })
-        .style("fill", function (d) {
-          if (d.colorPartido) {
-            return d.color = d.colorPartido;
-          } else {
-            return d.color = "";
-          }
-        })
-        .style("stroke", "#fff")
-        .append("title")
-        .text(function (d) {
-          return d.name + "\n" + format(d.value);
-        });
-
-      node.append("text")
-        .attr("text-anchor", "left")
-        .attr("x", sankey.nodeWidth() * 1.5)
-        .attr("y", (d) => {
-          return -(d.dy / 2)
-        })
-        .attr("dy", ".35em")
-        .attr("transform", "rotate(90)")
-        .text(function (d) {
-          if (d.y > 1)
-            return d.name;
-        })
-        .filter(function (d) {
-          return d.x < width / 2;
-        });
+      self.setState({nodes: nodeEls});
     });
+  }
+
+  formatCurrency(x) {
+    let number = Math.round(x / 1000000);
+    return "$" + number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " millones";
   }
 
 }

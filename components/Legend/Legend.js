@@ -1,6 +1,6 @@
 import React from 'react';
 import cx from 'classnames';
-import Link from '../Link';
+import Item from './LegendItem';
 import s from './Legend.css';
 
 class Legend extends React.Component {
@@ -10,23 +10,30 @@ class Legend extends React.Component {
 
     this.state = {
       items: []
-    }
+    };
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({items: nextProps.items});
   }
 
+  Cbf(id) {
+    if (this.props.hoverCallback)
+      this.props.hoverCallback(id);
+  }
+
   getPartidos() {
     if (!this.state.items) return;
     return this.state.items.map((partido, index) => {
+      let hovering = false;
+      if (this.props.hovering.length) {
+        if (this.props.hovering.indexOf(partido.nodeId) !== -1) {
+          hovering = true;
+        }
+      }
+
       return (
-        <li className={cx(s.item, {[s.item__hover]: (partido.partidoId == this.props.hovering)})}
-            key={partido.partidoId}
-        >
-          <span className={s.bullet} style={{backgroundColor: partido.colorPartido}}/>
-          {partido.name}
-        </li>
+        <Item key={index} hovering={hovering} index={index} hoverCk={this.Cbf.bind(this)} {...partido} />
       );
     });
   }

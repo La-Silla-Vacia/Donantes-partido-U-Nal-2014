@@ -139,7 +139,11 @@ function a() {
     // this bit is actually the node sizes (widths)
     //var ky = (size[1] - (nodes.length - 1) * nodePadding) / d3.sum(nodes, value)
     // this should be only source nodes surely (level 1)
-    var ky = (size[0] - (nodesByBreadth[0].length - 1) * nodePadding) / d3.sum(nodesByBreadth[0], value);
+    let nodeHeadings = nodesByBreadth[0];
+    if (nodesByBreadth[0] < nodesByBreadth[1]) {
+      nodeHeadings = nodesByBreadth[1];
+    }
+    var ky = (size[0] - (nodeHeadings.length - 1) * nodePadding) / d3.sum(nodeHeadings, value);
     // I'd like them to be much bigger, this calc doesn't seem to fill the space!?
 
     nodesByBreadth.forEach(function(nodes) {

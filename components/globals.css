@@ -8,34 +8,3 @@
 #chart {
   height: 1000px; /* must at least match the svg, to place content after it!*/
 }
-
-.node rect {
-  fill: var(--brand-black);
-  fill-opacity: .2;
-  shape-rendering: crispEdges;
-  transition: fill-opacity var(--transition-duration);
-  /*stroke-width: 10;*/
-}
-
-.node text {
-  opacity: .35;
-  transition: opacity var(--transition-duration);
-}
-
-.node--active rect {
-  fill-opacity: 1;
-}
-
-.node--active text {
-  opacity: 1;
-}
-
-.link {
-  fill: none;
-  stroke-opacity: .2;
-  transition: stroke-opacity var(--transition-duration);
-}
-
-.link:hover, .link--active {
-  stroke-opacity: .8;
-}

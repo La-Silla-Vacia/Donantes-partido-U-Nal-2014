@@ -9,6 +9,5 @@
     "node": true,
     "jasmine": true
   },
-  "extends": "airbnb",
   "plugins": ["react"]
 }
