@@ -271,8 +271,8 @@ class PartipacionWidget extends React.Component {
       .append("g");
 
     const sankey = d3.sankey()
-      .nodeWidth(20) // was 15
-      .nodePadding(10) // was 10
+      .nodeWidth(20)
+      .nodePadding(10)
       .size([width, height]);
 
     const path = sankey.link();

@@ -137,7 +137,7 @@ class PresupuestoWidget extends React.Component {
           };
 
           children.push(newEl);
-          legendItems.push({name: category, colorPartido: color, partidoId: index + 1});
+          legendItems.push({name: category, colorPartido: color, nodeId: index + 1});
         }
       }
     });
@@ -163,6 +163,10 @@ class PresupuestoWidget extends React.Component {
       });
   }
 
+  mouseMove(e) {
+    console.log(e.target);
+  }
+
   getNodes() {
     return this.state.nodes.map((node, index) => {
       let backgroundColor = node.color;
@@ -175,8 +179,9 @@ class PresupuestoWidget extends React.Component {
 
       let hideMoney = false;
       if (node.dx < 200 || node.dy < 130) hideMoney = true;
+      console.log(node);
       return (
-        <div className={s.node} key={index} style={{
+        <div onMouseEnter={this.mouseMove} className={s.node} key={index} style={{
           backgroundColor: backgroundColor,
           fontSize: fontSize,
           height: node.dy,

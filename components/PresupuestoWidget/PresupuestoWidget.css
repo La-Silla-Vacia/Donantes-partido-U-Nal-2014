@@ -9,6 +9,7 @@
   box-sizing: border-box;
   line-height: 1;
   background-color: var(--brand-color);
+  transition: var(--transition-duration);
 }
 
 .widget {
