@@ -21,7 +21,7 @@ class PartipacionWidgetItem extends React.Component {
   }
 
   mouseEnter(e) {
-    this.setState({hover: true});
+    // this.setState({hover: true});
     this.props.hoverCallback(this.props.index);
   }
 
@@ -47,7 +47,9 @@ class PartipacionWidgetItem extends React.Component {
               style={{strokeWidth: this.props.strokeWidth, stroke: this.props.color}}
               transform="translate(0, 15)"
         />
-        <path onMouseEnter={this.mouseEnter} onMouseLeave={this.mouseLeave} className={cx(s.link__hover)}
+        <path onMouseEnter={this.mouseEnter}
+              onClick={this.mouseEnter}
+              onMouseLeave={this.mouseLeave} className={cx(s.link__hover)}
               d={this.props.path}
               style={{strokeWidth: this.props.strokeWidth, stroke: this.props.color}}
               transform="translate(0, 15)"
@@ -55,11 +57,6 @@ class PartipacionWidgetItem extends React.Component {
         />
       </g>
     )
-  }
-
-  formatCurrency(x) {
-    let number = Math.round(x / 1000000);
-    return "$" + number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + " millones";
   }
 }
 

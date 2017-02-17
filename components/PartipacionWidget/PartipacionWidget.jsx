@@ -28,6 +28,7 @@ class PartipacionWidget extends React.Component {
       items: [],
       nodes: [],
       nodeActive: [],
+      linkActive: 999,
       activeText: "Cargando visualización...",
       activeAmount: "",
       chartWidth: 1200,
@@ -67,6 +68,10 @@ class PartipacionWidget extends React.Component {
       const entidadId = item.source.nodeId;
       const entidadTargetId = item.target.nodeId;
 
+      if (this.state.linkActive == index) {
+        data.active = true;
+      }
+
       if ((
         this.state.nodeActive.indexOf(sourceId) !== -1 ||
         this.state.nodeActive.indexOf(entidadId) !== -1) &&
@@ -94,7 +99,8 @@ class PartipacionWidget extends React.Component {
     this.setState({activeAmount: amount});
 
     this.setState({nodeActive: [item.source.nodeId, item.target.nodeId]});
-    this.setState({madeActiveBy: "item"})
+    this.setState({madeActiveBy: "item"});
+    this.setState({linkActive: index});
   }
 
   getHoverNode(type, id) {
@@ -124,6 +130,7 @@ class PartipacionWidget extends React.Component {
     this.setState({nodeActive: activeNodes});
     this.setState({activeText: title});
     this.setState({activeAmount: this.formatCurrency(value)});
+    this.setState({linkActive: 9999});
   }
 
   getHoverLegend(id) {
@@ -143,6 +150,7 @@ class PartipacionWidget extends React.Component {
 
     this.setState({activeText: title});
     this.setState({activeAmount: this.formatCurrency(value)});
+    this.setState({linkActive: 9999});
   }
 
   getNodes() {
@@ -292,17 +300,17 @@ class PartipacionWidget extends React.Component {
   formatData(data) {
     const sortBy = this.state.viewType;
 
-    const partidos = [];
+    const sources = [];
     const nodes = [];
     const links = [];
 
     data.map((el) => {
       let source = el.partido;
       let target = el.entidad;
-      console.log(sortBy);
       if (sortBy == "departementos") {
         target = el.departamento;
       }
+
       const presupuesto = el.presupuestoDeInversion;
 
       if (presupuesto) {
@@ -322,7 +330,7 @@ class PartipacionWidget extends React.Component {
         nodes.map((node, index) => {
           node.nodeId = index + 1;
           if (node.name == source) {
-            node.type = "partido";
+            node.type = "source";
             sourceIndex = index;
           }
           if (node.name == target) {
@@ -341,16 +349,15 @@ class PartipacionWidget extends React.Component {
             linkInLinks = true;
           }
         });
-
         if (!linkInLinks) links.push(result);
       }
     });
 
     nodes.map((node) => {
-      if (node.type == "partido") partidos.push(node);
+      if (node.type == "source") sources.push(node);
     });
 
-    this.setState({legendItems: partidos});
+    this.setState({legendItems: sources});
 
     return {nodes, links};
   }

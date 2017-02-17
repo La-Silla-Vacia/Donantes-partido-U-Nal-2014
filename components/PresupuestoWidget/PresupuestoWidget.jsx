@@ -165,9 +165,6 @@ class PresupuestoWidget extends React.Component {
 
   getNodes() {
     return this.state.nodes.map((node, index) => {
-      // let backgroundColor = node.color;
-      // if (!backgroundColor) backgroundColor = "#44a5db";
-
       let backgroundColor = node.color;
 
       const fontSize = Math.max(20, 0.05 * Math.sqrt(node.area)) + 'px';

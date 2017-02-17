@@ -20,6 +20,7 @@ class LegendItem extends React.Component {
       <li className={cx(s.item, {[s.item__hover]: this.props.hovering})}
           key={partido.nodeId}
           onMouseEnter={this.mouseEnter}
+          onClick={this.mouseEnter}
       >
         <span className={s.bullet} style={{backgroundColor: partido.colorPartido}}/>
         {partido.name}
