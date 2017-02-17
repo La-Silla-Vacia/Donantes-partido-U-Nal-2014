@@ -38,7 +38,7 @@ class PartipacionWidgetItem extends React.Component {
 
     return (
       <g>
-        <mask className={s.mask} id={`mask-${this.props.index}`} x="-500" y="0" width="1500" height="100">
+        <mask className={s.mask} id={`mask-${this.props.index}`} x="-500" y="0" width="1500" height="1000">
           <rect x="-200" y="20" width="1800" height={maskHeight} className={s.maskLayer}
                 style={{stroke: "none", fill: "#ffffff"}}/>
         </mask>

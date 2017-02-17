@@ -42,6 +42,10 @@ class PartipacionWidget extends React.Component {
     this.getHoverLegend = this.getHoverLegend.bind(this);
   }
 
+  componentDidMount() {
+    window.addEventListener('resize', this.createWidget.bind(this));
+  }
+
   switchOption(e) {
     this.setState({viewType: e.value});
     setTimeout(() => {
@@ -230,7 +234,11 @@ class PartipacionWidget extends React.Component {
     }
   }
 
-  createWidget(data) {
+  createWidget(incommingData) {
+    let data = incommingData;
+    if (data.length == undefined) { data = this.props.data; }
+    if (!data.length) return;
+
     d3.sankey = sankeyLib;
     const chart = document.querySelector('#chart');
     chart.innerHTML = "";
@@ -240,8 +248,11 @@ class PartipacionWidget extends React.Component {
       chartWidth = windowWidth;
     }
     let chartHeight = this.props.height;
-    if (chartHeight > (window.innerHeight / 3 * 1.5)) {
-      chartHeight = window.innerHeight / 3 * 2;
+    if (chartHeight > (window.innerHeight / 3 * 1.4)) {
+      chartHeight = window.innerHeight / 3 * 1.4;
+    }
+    if (chartHeight < 400) {
+      chartHeight = 400;
     }
 
     this.setState({
