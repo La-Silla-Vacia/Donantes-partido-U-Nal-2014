@@ -95,12 +95,15 @@ class PartipacionWidget extends React.Component {
     const item = this.state.items[index];
     const text = `${item.source.name} → ${item.target.name}`;
     const amount = this.formatCurrency(item.theValue);
-    this.setState({activeText: text});
-    this.setState({activeAmount: amount});
-
-    this.setState({nodeActive: [item.source.nodeId, item.target.nodeId]});
-    this.setState({madeActiveBy: "item"});
-    this.setState({linkActive: index});
+    this.setState({
+      activeText: text,
+      activeAmount: amount,
+      nodeActive: [
+        item.source.nodeId,
+        item.target.nodeId],
+      madeActiveBy: "item",
+      linkActive: index
+    });
   }
 
   getHoverNode(type, id) {
@@ -127,15 +130,15 @@ class PartipacionWidget extends React.Component {
       }
     });
 
-    this.setState({nodeActive: activeNodes});
-    this.setState({activeText: title});
-    this.setState({activeAmount: this.formatCurrency(value)});
-    this.setState({linkActive: 9999});
+    this.setState({
+      nodeActive: activeNodes,
+      activeText: title,
+      activeAmount: this.formatCurrency(value),
+      linkActive: 9999
+    });
   }
 
   getHoverLegend(id) {
-    this.setState({nodeActive: [id]});
-
     let value = 0;
     let title = "";
     this.state.nodes.map((node) => {
@@ -148,9 +151,12 @@ class PartipacionWidget extends React.Component {
       }
     });
 
-    this.setState({activeText: title});
-    this.setState({activeAmount: this.formatCurrency(value)});
-    this.setState({linkActive: 9999});
+    this.setState({
+      nodeActive: [id],
+      activeText: title,
+      activeAmount: this.formatCurrency(value),
+      linkActive: 9999
+    });
   }
 
   getNodes() {
