@@ -173,8 +173,11 @@ class PresupuestoWidget extends React.Component {
       const fontSize = Math.max(20, 0.05 * Math.sqrt(node.area)) + 'px';
       const amoundOfMoney = Math.round(node.presupuestoDeInversion / 1000000000);
 
-      let hide = false;
-      if (node.dx < 200 || node.dy < 150) hide = true;
+      let hideTitle = false;
+      if (node.dx < 150 || node.dy < 150) hideTitle = true;
+
+      let hideMoney = false;
+      if (node.dx < 200 || node.dy < 150) hideMoney = true;
       return (
         <div className={s.node} key={index} style={{
           backgroundColor: backgroundColor,
@@ -184,8 +187,8 @@ class PresupuestoWidget extends React.Component {
           right: node.x,
           top: node.y,
         }}>
-          <h3 className={cx(s.partido)}>{node.categoryName}</h3>
-          <span className={cx(s.money, {[s.money__hidden]: hide})}>{amoundOfMoney} Mil Millones</span>
+          <h3 className={cx(s.partido, {[s.partido__hidden]: hideTitle})}>{node.categoryName}</h3>
+          <span className={cx(s.money, {[s.money__hidden]: hideMoney})}>{amoundOfMoney} Mil Millones</span>
         </div>
       )
     });
@@ -223,23 +226,23 @@ class PresupuestoWidget extends React.Component {
   }
 
   shadeColor(color, percent) {
-    let R = parseInt(color.substring(1,3),16);
-    let G = parseInt(color.substring(3,5),16);
-    let B = parseInt(color.substring(5,7),16);
+    let R = parseInt(color.substring(1, 3), 16);
+    let G = parseInt(color.substring(3, 5), 16);
+    let B = parseInt(color.substring(5, 7), 16);
 
     R = parseInt(R * (100 + percent) / 100);
     G = parseInt(G * (100 + percent) / 100);
     B = parseInt(B * (100 + percent) / 100);
 
-    R = (R<255)?R:255;
-    G = (G<255)?G:255;
-    B = (B<255)?B:255;
+    R = (R < 255) ? R : 255;
+    G = (G < 255) ? G : 255;
+    B = (B < 255) ? B : 255;
 
-    let RR = ((R.toString(16).length==1)?"0"+R.toString(16):R.toString(16));
-    let GG = ((G.toString(16).length==1)?"0"+G.toString(16):G.toString(16));
-    let BB = ((B.toString(16).length==1)?"0"+B.toString(16):B.toString(16));
+    let RR = ((R.toString(16).length == 1) ? "0" + R.toString(16) : R.toString(16));
+    let GG = ((G.toString(16).length == 1) ? "0" + G.toString(16) : G.toString(16));
+    let BB = ((B.toString(16).length == 1) ? "0" + B.toString(16) : B.toString(16));
 
-    return "#"+RR+GG+BB;
+    return "#" + RR + GG + BB;
   }
 
 }

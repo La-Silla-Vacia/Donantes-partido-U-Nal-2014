@@ -32,7 +32,8 @@ class PartipacionWidget extends React.Component {
       items: [],
       nodes: [],
       nodeActive: [],
-      activeText: "Hoi"
+      activeText: "Cargando visualización...",
+      activeAmount: ""
     };
 
     this.getHoverItem = this.getHoverItem.bind(this);
@@ -60,11 +61,18 @@ class PartipacionWidget extends React.Component {
 
       const sourceId = item.source.nodeId;
       const entidadId = item.source.nodeId;
+      const entidadTargetId = item.target.nodeId;
 
       if ((
         this.state.nodeActive.indexOf(sourceId) !== -1 ||
         this.state.nodeActive.indexOf(entidadId) !== -1) &&
         this.state.madeActiveBy == "node") {
+        data.active = true;
+      }
+
+      if (
+        this.state.nodeActive.indexOf(entidadTargetId) !== -1 &&
+        this.state.madeActiveBy == "entidad") {
         data.active = true;
       }
 
@@ -97,24 +105,40 @@ class PartipacionWidget extends React.Component {
           node.sourceLinks.map((link) => {
             activeNodes.push(link.target.nodeId);
             value += link.value;
-          })
+          });
+          this.setState({madeActiveBy: "node"});
         } else {
           node.targetLinks.map((link) => {
             activeNodes.push(link.source.nodeId);
             value += link.value;
-          })
+          });
+          this.setState({madeActiveBy: "entidad"});
         }
       }
     });
 
     this.setState({nodeActive: activeNodes});
-    this.setState({madeActiveBy: "node"});
     this.setState({activeText: title});
     this.setState({activeAmount: this.formatCurrency(value)});
   }
 
   getHoverLegend(id) {
-    this.setState({nodeActive: [id]})
+    this.setState({nodeActive: [id]});
+
+    let value = 0;
+    let title = "";
+    this.state.nodes.map((node) => {
+      if (node.nodeId == id) {
+        title = node.name;
+
+        node.sourceLinks.map((link) => {
+          value += link.value;
+        })
+      }
+    });
+
+    this.setState({activeText: title});
+    this.setState({activeAmount: this.formatCurrency(value)});
   }
 
   getNodes() {
@@ -188,11 +212,17 @@ class PartipacionWidget extends React.Component {
   createWidget(data) {
     d3.sankey = sankeyLib;
     const chart = document.querySelector('#chart');
-    const chartWidth = 1200;
+    let chartWidth = this.props.width;
+    if (chartWidth > window.innerWidth) {
+      chartWidth = window.innerWidth;
+    }
+    let chartHeight = this.props.height;
+    if (chartHeight > (window.innerHeight / 3 * 2)) {
+      chartHeight = window.innerHeight / 3 * 2;
+    }
 
     const width = chartWidth, // was 960
-      //height = 1500 - margin.top - margin.bottom; // was 500
-      height = 650; // UBS Example
+      height = chartHeight; // UBS Example
 
     const svg = d3.select("#chart").append("svg")
       .attr("width", width)

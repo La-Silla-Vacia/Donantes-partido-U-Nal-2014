@@ -42,7 +42,7 @@ class HomePage extends React.Component {
         <div className={s.content} dangerouslySetInnerHTML={{ __html: html }} />
         {/*<Tendencias/>*/}
 
-        <Partipacion data={this.state.data} s/>
+        <Partipacion data={this.state.data} width="1200" height="650" />
         <Presupuesto data={this.state.data} />
       </Layout>
     );
