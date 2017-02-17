@@ -1,5 +1,9 @@
 @import "../variables.css";
 
+#chart {
+  display: none !important;
+}
+
 .chart {
   overflow: visible !important;
   max-width: 100%;
@@ -7,12 +11,13 @@
 
 .chartRoot {
   position: relative;
+  text-align: center;
 }
 
 .link {
   fill: none;
   stroke-opacity: .4;
-  transition: stroke-opacity var(--transition-duration);
+  transition: 1s;
 }
 
 .link__hover {
@@ -50,7 +55,6 @@
 
 .maskLayer {
   transition: 1s;
-  width: 300%;
 }
 
 .text {
@@ -66,7 +70,6 @@
 
 .textBox {
   background-color: #fff;
-  height: 8em;
   width: 26em;
   max-width: 90%;
   box-sizing: border-box;;
@@ -74,7 +77,7 @@
   top: 30%;
   left: 50%;
   transform: translateY(-50%) translateX(-50%);
-  box-shadow: 0 0 7em rgba(0,0,0,.1);
+  box-shadow: 0 0 7em rgba(0, 0, 0, .1);
   padding: 1em 2em;
   text-align: center;
 }
@@ -83,7 +86,6 @@
 .activeAmount {
   display: block;
   font-size: 1.25em;
-  margin-top: 0.4em;
 }
 
 .activeAmount {

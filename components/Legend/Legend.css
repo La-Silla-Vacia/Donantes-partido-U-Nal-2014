@@ -41,3 +41,11 @@
   margin-top: 0.15em;
   float: left;
 }
+
+@media (max-width: 1024px) {
+  .root {
+    padding-left: 1em;
+    padding-right: 1em;
+    box-sizing: border-box;
+  }
+}

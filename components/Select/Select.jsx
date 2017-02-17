@@ -61,7 +61,8 @@ class Select extends React.Component {
     const options = this.getOptions();
 
     return (
-      <div className={cx(s.root, {[s.root__open]: this.state.open})} onClick={this.openSelect}
+      <div className={cx(s.root, {[s.root__open]: this.state.open})}
+           onClick={this.openSelect}
            onKeyDown={this.openSelect} tabIndex="0">
         <span>{this.state.currentOption}</span>
         <div className={s.inner}>

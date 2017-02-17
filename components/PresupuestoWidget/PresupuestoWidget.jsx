@@ -174,10 +174,10 @@ class PresupuestoWidget extends React.Component {
       const amoundOfMoney = Math.round(node.presupuestoDeInversion / 1000000000);
 
       let hideTitle = false;
-      if (node.dx < 150 || node.dy < 150) hideTitle = true;
+      if (node.dx < 150 || node.dy < 130) hideTitle = true;
 
       let hideMoney = false;
-      if (node.dx < 200 || node.dy < 150) hideMoney = true;
+      if (node.dx < 200 || node.dy < 130) hideMoney = true;
       return (
         <div className={s.node} key={index} style={{
           backgroundColor: backgroundColor,

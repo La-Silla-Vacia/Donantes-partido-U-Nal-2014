@@ -15,16 +15,12 @@ class PartipacionWidget extends React.Component {
     this.state = {
       selectOptions: [
         {
-          label: "Partidos Póliticos",
-          value: "partidosPoliticos",
-        },
-        {
-          label: "Departemento",
-          value: "departemento"
-        },
-        {
           label: "Entidades",
           value: "entidades"
+        },
+        {
+          label: "Departamentos",
+          value: "departementos"
         }
       ],
       legendItems: [],
@@ -33,16 +29,24 @@ class PartipacionWidget extends React.Component {
       nodes: [],
       nodeActive: [],
       activeText: "Cargando visualización...",
-      activeAmount: ""
+      activeAmount: "",
+      chartWidth: 1200,
+      chartHeight: 1000,
+      viewType: "entidades",
     };
 
+    this.switchOption = this.switchOption.bind(this);
     this.getHoverItem = this.getHoverItem.bind(this);
     this.getHoverNode = this.getHoverNode.bind(this);
     this.getHoverLegend = this.getHoverLegend.bind(this);
   }
 
-  static switchOption(e) {
-    console.log(e);
+  switchOption(e) {
+    this.setState({viewType: e.value});
+    setTimeout(() => {
+      console.log(this.state.viewType);
+      this.createWidget(this.props.data);
+    }, 10);
   }
 
   getItems() {
@@ -163,7 +167,7 @@ class PartipacionWidget extends React.Component {
         className={s.select}
         value="Entidades"
         options={this.state.selectOptions}
-        callback={PartipacionWidget.switchOption}
+        callback={this.switchOption}
       />
     );
 
@@ -172,7 +176,7 @@ class PartipacionWidget extends React.Component {
 
     return (
       <Widget
-        title="Partipación de los Partidos Póliticos en %s"
+        title="Partipación de los Partidos Políticos en %s"
         select={select}
       >
 
@@ -185,7 +189,7 @@ class PartipacionWidget extends React.Component {
         <div id="chart" hidden></div>
 
         <div className={s.chartRoot}>
-          <svg className={s.chart} width="1200" height="1000">
+          <svg className={s.chart} width={this.state.chartWidth} height={this.state.chartHeight}>
             <g transform="translate(1,10)">
               <g>
                 { items }
@@ -207,19 +211,31 @@ class PartipacionWidget extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     this.createWidget(nextProps.data);
+    if (nextProps.data.length && !this.state.activeAmount) {
+      this.setState({activeText: `Seleccione un filtro para ver la participación de los Partidos Políticos en las entidades o en los departamentos. Al hacer clic en cada relación usted podrá ver cuánto es su presupuesto`})
+    }
   }
 
   createWidget(data) {
     d3.sankey = sankeyLib;
     const chart = document.querySelector('#chart');
+    chart.innerHTML = "";
     let chartWidth = this.props.width;
-    if (chartWidth > window.innerWidth) {
-      chartWidth = window.innerWidth;
+    const windowWidth = window.innerWidth - 32;
+    if (chartWidth > windowWidth) {
+      chartWidth = windowWidth;
     }
     let chartHeight = this.props.height;
-    if (chartHeight > (window.innerHeight / 3 * 2)) {
+    if (chartHeight > (window.innerHeight / 3 * 1.5)) {
       chartHeight = window.innerHeight / 3 * 2;
     }
+
+    this.setState({
+      chartHeight: chartHeight + 300,
+      chartWidth: chartWidth
+    });
+
+    const {nodes, links} = this.formatData(data);
 
     const width = chartWidth, // was 960
       height = chartHeight; // UBS Example
@@ -236,64 +252,8 @@ class PartipacionWidget extends React.Component {
 
     const path = sankey.link();
 
-    const partidos = [];
-    const nodes = [];
-    const links = [];
-
     const items = [];
     const nodeEls = [];
-
-    data.map((el) => {
-      const partido = el.partido;
-      const presupuesto = el.presupuestoDeInversion;
-
-      if (presupuesto) {
-        const entidad = el.entidad;
-        let partidoInNodes = false;
-        let entidadInNodes = false;
-        nodes.map((node) => {
-          if (node.name == partido) partidoInNodes = true;
-          if (node.name == entidad) entidadInNodes = true;
-        });
-        if (!partidoInNodes) {
-          nodes.push({name: partido, colorPartido: el.colorPartido});
-        }
-        if (!entidadInNodes) nodes.push({name: entidad});
-
-        let partidoIndex = 0;
-        let entidadIndex = 0;
-        nodes.map((node, index) => {
-          node.nodeId = index + 1;
-          if (node.name == partido) {
-            node.type = "partido";
-            partidoIndex = index;
-          }
-          if (node.name == entidad) {
-            entidadIndex = index;
-          }
-          node.presupuesto = presupuesto;
-        });
-
-        let linkInLinks = false;
-        const value = presupuesto / 1000;
-        const result = {"source": partidoIndex, "target": entidadIndex, "value": value, "theValue": value};
-
-        links.map((link) => {
-          if (link.source === partidoIndex && link.target === entidadIndex) {
-            link.value += value;
-            linkInLinks = true;
-          }
-        });
-
-        if (!linkInLinks) links.push(result);
-      }
-    });
-
-    nodes.map((node) => {
-      if (node.type == "partido") partidos.push(node);
-    });
-
-    this.setState({legendItems: partidos});
 
     sankey
       .nodes(nodes)
@@ -323,9 +283,76 @@ class PartipacionWidget extends React.Component {
         const item = d;
         item.width = d.dy;
         nodeEls.push(item);
-      });
+      })
+      .remove();
 
     this.setState({nodes: nodeEls});
+  }
+
+  formatData(data) {
+    const sortBy = this.state.viewType;
+
+    const partidos = [];
+    const nodes = [];
+    const links = [];
+
+    data.map((el) => {
+      let source = el.partido;
+      let target = el.entidad;
+      console.log(sortBy);
+      if (sortBy == "departementos") {
+        target = el.departamento;
+      }
+      const presupuesto = el.presupuestoDeInversion;
+
+      if (presupuesto) {
+        let sourceInNodes = false;
+        let targetInNodes = false;
+        nodes.map((node) => {
+          if (node.name == source) sourceInNodes = true;
+          if (node.name == target) targetInNodes = true;
+        });
+        if (!sourceInNodes) {
+          nodes.push({name: source, colorPartido: el.colorPartido});
+        }
+        if (!targetInNodes) nodes.push({name: target});
+
+        let sourceIndex = 0;
+        let targetIndex = 0;
+        nodes.map((node, index) => {
+          node.nodeId = index + 1;
+          if (node.name == source) {
+            node.type = "partido";
+            sourceIndex = index;
+          }
+          if (node.name == target) {
+            targetIndex = index;
+          }
+          node.presupuesto = presupuesto;
+        });
+
+        let linkInLinks = false;
+        const value = presupuesto / 1000;
+        const result = {"source": sourceIndex, "target": targetIndex, "value": value, "theValue": value};
+
+        links.map((link) => {
+          if (link.source === sourceIndex && link.target === targetIndex) {
+            link.value += value;
+            linkInLinks = true;
+          }
+        });
+
+        if (!linkInLinks) links.push(result);
+      }
+    });
+
+    nodes.map((node) => {
+      if (node.type == "partido") partidos.push(node);
+    });
+
+    this.setState({legendItems: partidos});
+
+    return {nodes, links};
   }
 
   formatCurrency(x) {
