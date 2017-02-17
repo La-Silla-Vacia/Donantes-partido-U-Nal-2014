@@ -1,4 +1,4 @@
-@import "../variables.css";
+@import '../variables.css';
 
 #chart {
   display: none !important;
@@ -16,7 +16,7 @@
 
 .link {
   fill: none;
-  stroke-opacity: .4;
+  stroke-opacity: 0.4;
   transition: 1s;
 }
 
@@ -24,20 +24,20 @@
   fill: none;
 }
 
-.link:hover, .link--active {
-  stroke-opacity: .8;
+.link:hover,
+.link--active {
+  stroke-opacity: 0.8;
 }
 
 .node rect {
   fill: var(--brand-black);
-  fill-opacity: .2;
+  fill-opacity: 0.2;
   shape-rendering: crispEdges;
   transition: fill-opacity var(--transition-duration);
-  /*stroke-width: 10;*/
 }
 
 .node text {
-  opacity: .35;
+  opacity: 0.35;
   transition: opacity var(--transition-duration);
 }
 
@@ -72,12 +72,12 @@
   background-color: #fff;
   width: 26em;
   max-width: 90%;
-  box-sizing: border-box;;
+  box-sizing: border-box;
   position: absolute;
   top: 30%;
   left: 50%;
   transform: translateY(-50%) translateX(-50%);
-  box-shadow: 0 0 7em rgba(0, 0, 0, .1);
+  box-shadow: 0 0 7em rgba(0, 0, 0, 0.1);
   padding: 1em 2em;
   text-align: center;
 }

@@ -1,4 +1,4 @@
-@import "../variables.css";
+@import '../variables.css';
 
 .root {
   border-bottom: 1px solid var(--brand-lightgrey);
@@ -12,5 +12,5 @@
 
 .title {
   display: block;
-  margin-bottom: .5em;
+  margin-bottom: 0.5em;
 }

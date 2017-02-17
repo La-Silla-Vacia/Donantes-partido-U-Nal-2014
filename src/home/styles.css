@@ -1,4 +1,4 @@
-@import "../../components/variables.css";
+@import '../../components/variables.css';
 
 .content {
   margin: 6em auto;
@@ -9,7 +9,7 @@
 
 .content h1 {
   margin-bottom: 0;
-  font-family: "Georgia", Times new roman, serif;
+  font-family: 'Georgia', Times new roman, serif;
   font-size: 3.5em;
 }
 
@@ -29,17 +29,15 @@
 }
 
 .content p {
-  font-family: "Georgia", Times new roman, serif;
+  font-family: 'Georgia', Times new roman, serif;
   font-size: 1.25em;
   text-align: left;
   font-weight: lighter;
 }
 
 @media screen and (max-width: 1024px) {
-
   .content {
     padding: 0 1em;
     box-sizing: border-box;
   }
-
 }

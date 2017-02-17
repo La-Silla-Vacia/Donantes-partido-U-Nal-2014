@@ -1,9 +1,9 @@
-@import "../variables.css";
+@import '../variables.css';
 
 .root {
   border: 1px solid #2d3132;
   border-radius: 5px;
-  font-size: .7em;
+  font-size: 0.7em;
   padding: 0.21em 1.75em 0.15em 0.75em;
   display: inline-block;
   cursor: pointer;
@@ -11,7 +11,7 @@
   height: 1.5em;
   position: relative;
   width: 8em;
-  margin: -0.5em .25em;
+  margin: -0.5em 0.25em;
   font-family: var(--font-family-base);
   font-weight: 300;
   z-index: 10;
@@ -20,9 +20,9 @@
 .root::after {
   content: '';
   position: absolute;
-  width: .5em;
-  height: .5em;
-  right: .75em;
+  width: 0.5em;
+  height: 0.5em;
+  right: 0.75em;
   top: 0.875em;
   transform: rotate(45deg);
   transition: var(--transition-duration);
@@ -37,7 +37,7 @@
 
 .root__open::after {
   transform: rotate(-135deg);
-  top: .5em;
+  top: 0.5em;
 }
 
 .root__open .inner {

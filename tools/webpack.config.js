@@ -37,7 +37,7 @@ const config = {
     // '!!style-loader!css-loader!react-mdl/extra/material.min.css',
     '!!style-loader!css-loader!react-select/dist/react-select.css',
     '!!style-loader!css-loader!normalize.css/normalize.css',
-    '!!style-loader!css-loader!../components/globals.css',
+    // '!!style-loader!css-loader!../components/globals.css',
     /* The main entry point of your JavaScript application */
     './main.jsx',
   ],

@@ -1,11 +1,11 @@
-@import "../variables.css";
+@import '../variables.css';
 
 .root {
   width: 100%;
 }
 
 .root__hovering .item {
-  opacity: .35;
+  opacity: 0.35;
 }
 
 .list {
@@ -18,7 +18,7 @@
   flex-direction: row;
   flex-wrap: wrap;
   max-width: 73em;
-  margin: 2em auto 2em;
+  margin: 2em auto;
 }
 
 .item {
