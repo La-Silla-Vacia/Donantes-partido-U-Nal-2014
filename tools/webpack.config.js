@@ -37,7 +37,7 @@ const config = {
     // '!!style-loader!css-loader!react-mdl/extra/material.min.css',
     '!!style-loader!css-loader!react-select/dist/react-select.css',
     '!!style-loader!css-loader!normalize.css/normalize.css',
-    // '!!style-loader!css-loader!../components/globals.css',
+    '!!style-loader!css-loader!../components/globals.css',
     /* The main entry point of your JavaScript application */
     './main.jsx',
   ],
@@ -46,7 +46,7 @@ const config = {
   output: {
     path: path.resolve(__dirname, '../public/dist'),
     publicPath: isDebug ? `http://localhost:${process.env.PORT || 3000}/dist/` : '/dist/',
-    filename: isDebug ? '[name].js?[hash]' : '[name].[hash].js',
+    filename: isDebug ? '[name].js?[hash]' : '[name].js',
     chunkFilename: isDebug ? '[id].js?[chunkhash]' : '[id].[chunkhash].js',
     sourcePrefix: '  ',
   },

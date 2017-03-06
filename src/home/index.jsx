@@ -1,7 +1,7 @@
 import React from 'react';
 import 'whatwg-fetch';
 import Layout from '../../components/Layout';
-import Tendencias from '../../components/TendenciasWidget';
+import Departementos from '../../components/DepartementosWidget';
 import Partipacion from '../../components/PartipacionWidget';
 import Presupuesto from '../../components/PresupuestoWidget';
 import s from './styles.css';
@@ -40,9 +40,8 @@ class HomePage extends React.Component {
     return (
       <Layout>
         <div className={s.content} dangerouslySetInnerHTML={{ __html: html }} />
-        {/*<Tendencias/>*/}
-
-        <Partipacion data={this.state.data} width="1200" height="650" />
+        <Departementos data={this.state.data} />
+        <Partipacion data={this.state.data} width="1168" height="650" />
         <Presupuesto data={this.state.data} />
       </Layout>
     );

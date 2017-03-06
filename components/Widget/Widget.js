@@ -12,7 +12,10 @@ class Header extends React.Component {
   render() {
     const titleParts = this.props.title.split('%s');
     const title = (
-      <h2 className={s.title}>
+      <h2 className={cx(
+        s.title,
+        {[s.floatTitle]: this.props.floatTitle}
+      )}>
         {titleParts[0]}
         {this.props.select}
         {titleParts[1]}
@@ -20,6 +23,13 @@ class Header extends React.Component {
 
     return (
       <section className={cx(s.root, {[s.root__full_width]: this.props.fullWidth})}>
+        <div className={s.upperTitle}>
+          <span />
+          <h2>
+            {this.props.upperTitle}
+          </h2>
+          <p>{this.props.upperDescription}</p>
+        </div>
         {title}
         {this.props.children}
       </section>

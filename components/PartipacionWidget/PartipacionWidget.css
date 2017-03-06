@@ -91,3 +91,9 @@
 .activeAmount {
   font-weight: bold;
 }
+
+.legend {
+  width: 70%;
+  margin-right: 10%;
+  padding-left: 1em;
+}

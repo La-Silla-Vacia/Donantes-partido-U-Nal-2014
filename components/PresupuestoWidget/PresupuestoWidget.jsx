@@ -8,7 +8,6 @@ import Select from '../Select';
 import s from './PresupuestoWidget.css';
 
 class PresupuestoWidget extends React.Component {
-
   constructor() {
     super();
     this.state = {
@@ -179,7 +178,7 @@ class PresupuestoWidget extends React.Component {
 
       let hideMoney = false;
       if (node.dx < 200 || node.dy < 130) hideMoney = true;
-      console.log(node);
+      // console.log(node);
       return (
         <div onMouseEnter={this.mouseMove} className={s.node} key={index} style={{
           backgroundColor: backgroundColor,
@@ -211,6 +210,8 @@ class PresupuestoWidget extends React.Component {
 
     return (
       <Widget
+        upperTitle="Presupuesto"
+        upperDescription="Donec sed odio dui. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ullamcorper nulla non metus auctor fringilla. Aenean lacinia bibendum nulla sed consectetur."
         title="Presupuesto por %s"
         select={select}
         fullWidth={true}

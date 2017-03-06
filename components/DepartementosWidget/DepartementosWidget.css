@@ -1,0 +1,509 @@
+@import '../variables.css';
+
+.container {
+  width: 95em;
+  max-width: 100%;
+  margin: 0 auto;
+  position: relative;
+}
+
+.tableLayout {
+  position: relative;
+}
+
+.containerOpen .row__columnTitle {
+  flex-basis: 20% !important;
+  max-width: 20% !important;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  float: none;
+  width: 100%;
+}
+
+.row::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.rowLineBelow {
+  border-bottom: 2px solid #454849;
+}
+
+.row__column {
+  flex: 1;
+  float: left;
+  min-height: 1px;
+  transition: max-width .3s, max-height .3s, padding .3s, opacity .3s;
+  cursor: pointer;
+}
+
+.row__column.hover {
+  background-color: rgba(200, 200, 200, .5);
+}
+
+.row__column.hover .row__column {
+  background-color: rgba(200, 200, 200, .5);
+}
+
+.row__columnTitle {
+  cursor: default;
+}
+
+.colCount_2 .row__column {
+  flex-basis: 33.33333%;
+  max-width: 33.333333%;
+}
+
+.colCount_3 .row__column {
+  flex-basis: 25%;
+  max-width: 25%;
+}
+
+.colCount_4 .row__column {
+  flex-basis: 20%;
+  max-width: 20%;
+}
+
+.colCount_5 .row__column {
+  flex-basis: 16.66667%;
+  max-width: 16.66667%;
+}
+
+.colCount_6 .row__column {
+  flex-basis: 14.2857%;
+  max-width: 14.2857%;
+}
+
+.colCount_7 .row__column {
+  flex-basis: 12.5%;
+  max-width: 12.5%;
+}
+
+.colCount_8 .row__column {
+  flex-basis: 11.1111%;
+  max-width: 11.1111%;
+}
+
+.row__columnOpen {
+  max-width: 20% !important;
+  background-color: rgba(200, 200, 200, .5);
+}
+
+.row__columnClosed {
+  flex-basis: 0 !important;
+  max-width: 0 !important;
+  opacity: 0;
+  overflow-x: hidden;
+}
+
+.row__title {
+  font-family: "Roboto Slab", "Roboto", Helvetica, sans-serif;
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-top: 1.5em;
+}
+
+.columnLineCenter {
+  position: relative;
+}
+
+.columnLineCenter::before {
+  content: "";
+  width: 2px;
+  height: 100%;
+  display: block;
+  position: absolute;
+  margin: 0 auto;
+  left: 0;
+  right: 0;
+  background-color: #454849;
+}
+
+.person {
+  text-align: center;
+  padding-top: 1em;
+}
+
+.personWidthArrow {
+  position: relative;
+  padding-bottom: 3em;
+}
+
+.personWidthArrow::after {
+  content: "";
+  width: 1em;
+  height: 1em;
+  display: block;
+  margin: 1.5em auto;
+  background: url('./images/icons/arrow-down.svg') no-repeat;
+  background-size: contain;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  z-index: 1;
+  transform: translateX(-50%);
+}
+
+.personSmall {
+  padding-top: 0;
+  position: relative;
+}
+
+.personSmall::after {
+  content: "";
+  width: 1em;
+  height: 1em;
+  display: none;
+  margin: 2em auto;
+  background: url('./images/icons/arrow-down.svg') no-repeat;
+  background-size: contain;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  z-index: 1;
+  transform: translateX(-50%);
+}
+
+.personSmall .person__avatar img {
+  width: 4em;
+  height: 4em;
+}
+
+.person__avatar img {
+  width: 6.25em;
+  height: 6.25em;
+  border-radius: 6.25em;
+}
+
+.person__name {
+  font-family: "Roboto Slab", "Roboto", Helvetica, sans-serif;
+  margin-bottom: 0;
+  margin-top: 0.5em;
+  font-size: 1em;
+}
+
+.person__function {
+  margin-top: 0.2em;
+  color: #898d90;
+}
+
+.content {
+  background-color: #fff;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 60%;
+  height: 100%;
+  transition: width .3s;
+  overflow: scroll;
+  line-height: 1.5;
+}
+
+.contentHidden {
+  width: 0;
+}
+
+.content__inner {
+  padding: 1em 3em 2em;
+  box-sizing: border-box;
+}
+
+.content__header {
+  padding: 0 3em;
+}
+
+.content__closeButton {
+  background: none;
+  border: none;
+  position: absolute;
+  right: 3em;
+  top: 1em;
+  cursor: pointer;
+}
+
+.content__closeButton svg {
+  width: 2em;
+  height: 2em;
+}
+
+.destination__title {
+  font-family: "Roboto Slab", "Roboto", Helvetica, sans-serif;
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.budget__circle {
+  width: 1.5em;
+  height: 1.5em;
+  margin: 0 auto;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  transform: translateY(50%);
+  background-color: currentColor;
+  border-radius: 1.5em;
+  z-index: 1;
+}
+
+.budget__spend {
+  background-color: currentColor;
+  margin: 0 auto;
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: .9;
+}
+
+.destination {
+  text-align: center;
+}
+
+.destination__brand {
+  width: 5em;
+  height: 5em;
+  position: relative;
+  margin: 6em auto 0;
+  z-index: 2;
+}
+
+.destination__brand svg,
+.destination__brand img,
+.destination__brand .imgFallback {
+  max-width: 100%;
+  height: auto;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+}
+
+.destination__brand img {
+  width: 55%;
+}
+
+.destination__brand .imgFallback {
+  color: #fff;
+  top: 50%;
+  transform: translateY(-50%);
+  bottom: inherit;
+}
+
+.destination__shield {
+  color: currentColor;
+  opacity: .9;
+}
+
+.loading h2 {
+  padding-left: 2rem;
+}
+
+@media (max-width: 768px) {
+  .container {
+    width: 100%;
+  }
+
+  .tableLayout {
+    display: flex;
+  }
+
+  .containerOpen .row__columnTitle {
+    flex-basis: inherit !important;
+    max-width: inherit !important;
+  }
+
+  .column__inner {
+    width: inherit !important;
+  }
+
+  .row__columnOpen {
+    max-width: inherit !important;
+  }
+
+  .row__columnClosed {
+    max-width: inherit !important;
+    flex-basis: inherit !important;
+    height: 0 !important;
+    padding: 0 !important;
+  }
+
+  .row__title {
+    font-size: 1em;
+  }
+
+  .row {
+    display: block;
+    height: 10em;
+  }
+
+  .row__column {
+    flex-basis: inherit;
+    max-width: inherit;
+    width: 100%;
+    padding: 1rem 0;
+    height: 12rem;
+    min-height: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .row__column:nth-child(2n) {
+    background-color: #f1f1f1;
+  }
+
+  .row__column.hover {
+    background-color: rgba(200, 200, 200, .5);
+  }
+
+  .row__column .row__columnTitle {
+    height: 4em;
+    align-items: flex-end;
+  }
+
+  .row__column#presupuests {
+    display: none;
+  }
+
+  .columnLineCenter::before {
+    width: 100%;
+    height: 2px;
+    bottom: 50%;
+  }
+
+  .personWidthArrow::after {
+    transform: rotate(-90deg) translateY(-50%);
+    left: 100%;
+    bottom: 50%;
+  }
+
+  .personSmall .person__avatar img {
+    width: 17vw;
+    height: 17vw;
+    max-width: 4em;
+    max-height: 4em;
+    margin: 0.6em 0;
+  }
+
+  .personSmall::after {
+    transform: rotate(-90deg) translateY(-50%);
+    left: 100%;
+    bottom: 50%;
+    display: block;
+  }
+
+  .person__avatar img {
+    max-width: 5em;
+    max-height: 5em;
+  }
+
+  .person__name {
+    font-size: 1em;
+  }
+
+  .person__function {
+    min-width: 1em;
+    min-height: 1em;
+  }
+
+  .content {
+    height: 770px;
+    width: 100%;
+    top: 21em;
+  }
+
+  .content__inner {
+    padding: 1.5em;
+    width: 100% !important;
+  }
+
+  .content__header {
+    padding: 0 1.5em;
+  }
+
+  .destination__title {
+    font-size: calc(.8em + 1vw);
+    margin-bottom: 0;
+  }
+
+  .budget__spend {
+    transform: translateX(-50%) scale(0.2);
+  }
+
+  .destination__brand {
+    margin-top: 0;
+  }
+
+  .destination__brand svg {
+    width: 90%;
+  }
+
+  .destination__brand img {
+    width: 45%;
+  }
+
+  .destination__amound {
+    font-size: .8em;
+  }
+
+  #destinations .visuallyHidden {
+    position: inherit;
+    width: auto;
+    height: auto;
+    overflow: inherit;
+    clip: inherit;
+  }
+}
+
+@media screen and (max-width: 26em) {
+  .personSmall .person__avatar img {
+    margin: 0;
+  }
+}
+
+@media (min-width: 769px) {
+  .destination__amound {
+    display: block;
+    position: absolute;
+    top: 2em;
+    width: 100%;
+    font-size: 0.85em;
+    color: #898d90;
+  }
+
+  .destination__amound::before,
+  .destination__amound::after {
+    content: "";
+    width: 2px;
+    height: 2em;
+    position: absolute;
+    display: block;
+    background-color: #454849;
+    top: -2em;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .destination__amound::after {
+    top: inherit;
+    bottom: 0;
+    transform: translateY(1.5em) translateX(-50%);
+  }
+
+  .destination__amound:first-line {
+    font-size: 1.25em;
+    font-family: "Roboto Slab", "Roboto", Helvetica, sans-serif;
+    color: #454849;
+  }
+
+  .row__column.destination {
+    position: relative;
+  }
+}

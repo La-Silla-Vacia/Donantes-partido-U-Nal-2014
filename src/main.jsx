@@ -13,7 +13,7 @@ import history from './history';
 let routes = require('./routes.json').default; // Loaded with utils/routes-loader.js
 
 /* eslint-disable */
-const container = document.getElementById('container');
+const container = document.getElementById('silla-interactive-container');
 /* eslint-enable */
 
 function renderComponent(component) {

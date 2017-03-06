@@ -4,14 +4,64 @@
   width: 100%;
   max-width: var(--screen-lg-min);
   margin: 0 auto;
+  background-color: var(--brand-white);
+  padding-left: 1em;
+  padding-right: 1em;
 }
 
 .root__full_width {
   max-width: inherit;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 .title {
   font-family: var(--font-family-display);
   font-size: 2em;
   text-align: center;
+}
+
+.upperTitle {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 60px;
+  padding-left: 2em;
+  padding-right: 2em;
+  border-top: 1px solid #ddd;
+}
+
+.upperTitle span {
+  background: var(--brand-red);
+  width: 30px;
+  padding: 2px;
+  display: block !important;
+}
+
+.upperTitle h2 {
+  color: #444848;
+  font-family: 'Roboto Slab', serif;
+  text-transform: uppercase;
+  font-size: 18px;
+  font-weight: 700;
+  max-width: 200px;
+}
+
+.upperTitle p {
+  max-width: 400px;
+  margin-bottom: 3em;
+}
+
+.floatTitle {
+  float: right;
+  margin-right: 1em;
+  margin-top: 0;
+  text-align: right;
+  font-size: 1.4em;
+}
+
+.floatTitle > div {
+  display: block;
+  margin-top: 0.5em;
+  margin-right: 0;
+  font-size: 0.8em;
 }

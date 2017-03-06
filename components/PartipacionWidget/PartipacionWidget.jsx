@@ -194,15 +194,19 @@ class PartipacionWidget extends React.Component {
 
     return (
       <Widget
-        title="Partipación de los Partidos Políticos en %s"
+        upperTitle="Clientelismo en los Partidos"
+        upperDescription="Seleccione un filtro para ver la participación de los partidos políticos por entidad y por departamento. Al hacer clic en cada relación usted podrá ver cuánto es su presupuesto."
+        title="Filtre por %s"
         select={select}
+        floatTitle
       >
-
-        <Legend
-          items={this.state.legendItems}
-          hovering={this.state.nodeActive}
-          hoverCallback={this.getHoverLegend}
-        />
+        <div className={s.legend}>
+          <Legend
+            items={this.state.legendItems}
+            hovering={this.state.nodeActive}
+            hoverCallback={this.getHoverLegend}
+          />
+        </div>
 
         <div id="chart" hidden></div>
 
@@ -230,13 +234,15 @@ class PartipacionWidget extends React.Component {
   componentWillReceiveProps(nextProps) {
     this.createWidget(nextProps.data);
     if (nextProps.data.length && !this.state.activeAmount) {
-      this.setState({activeText: `Seleccione un filtro para ver la participación de los Partidos Políticos en las entidades o en los departamentos. Al hacer clic en cada relación usted podrá ver cuánto es su presupuesto`})
+      this.setState({activeText: `Seleccione un filtro para ver la participación de los partidos políticos por entidad y por departamento. Al hacer clic en cada relación usted podrá ver cuánto es su presupuesto.`})
     }
   }
 
   createWidget(incommingData) {
     let data = incommingData;
-    if (data.length == undefined) { data = this.props.data; }
+    if (data.length == undefined) {
+      data = this.props.data;
+    }
     if (!data.length) return;
 
     d3.sankey = sankeyLib;
