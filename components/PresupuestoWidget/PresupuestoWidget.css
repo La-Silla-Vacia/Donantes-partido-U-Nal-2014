@@ -38,3 +38,10 @@
 .money__hidden {
   opacity: 0;
 }
+
+.legend {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-left: 6em;
+  padding-right: 6em;
+}

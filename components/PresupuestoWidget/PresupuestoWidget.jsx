@@ -215,12 +215,15 @@ class PresupuestoWidget extends React.Component {
         title="Presupuesto por %s"
         select={select}
         fullWidth={true}
+        floatTitle
       >
 
-        <Legend
-          items={this.state.legendItems}
-          hovering={this.state.hovering}
-        />
+        <div className={s.legend}>
+          <Legend
+            items={this.state.legendItems}
+            hovering={this.state.hovering}
+          />
+        </div>
 
         <div id="presupuestoChart" className={s.widget}>{nodes}</div>
 

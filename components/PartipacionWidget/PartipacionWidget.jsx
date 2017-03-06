@@ -2,10 +2,10 @@ import React from 'react';
 import d3 from 'd3';
 import sankeyLib from '../Sankey/Sankey.js';
 import Widget from '../Widget';
-import Select from '../Select';
 import Legend from '../Legend';
 import Item from './Item.jsx';
 import Node from './Node.jsx';
+import Select from '../Select';
 import s from './PartipacionWidget.css';
 
 class PartipacionWidget extends React.Component {

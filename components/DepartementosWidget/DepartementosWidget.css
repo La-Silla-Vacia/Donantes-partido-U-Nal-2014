@@ -21,6 +21,7 @@
   flex-wrap: wrap;
   float: none;
   width: 100%;
+  box-sizing: content-box;
 }
 
 .row::after {
@@ -39,6 +40,7 @@
   min-height: 1px;
   transition: max-width .3s, max-height .3s, padding .3s, opacity .3s;
   cursor: pointer;
+  box-sizing: content-box;
 }
 
 .row__column.hover {
@@ -93,7 +95,7 @@
   background-color: rgba(200, 200, 200, .5);
 }
 
-.row__columnClosed {
+.containerOpen .row__column:not(.row__columnOpen):not(:first-child) {
   flex-basis: 0 !important;
   max-width: 0 !important;
   opacity: 0;
@@ -184,6 +186,7 @@
   margin-bottom: 0;
   margin-top: 0.5em;
   font-size: 1em;
+  font-weight: bold;
 }
 
 .person__function {
@@ -204,7 +207,8 @@
 }
 
 .contentHidden {
-  width: 0;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 .content__inner {
@@ -234,6 +238,7 @@
   font-family: "Roboto Slab", "Roboto", Helvetica, sans-serif;
   margin-top: 1em;
   margin-bottom: 1em;
+  font-weight: bold;
 }
 
 .budget__circle {
@@ -305,13 +310,13 @@
   padding-left: 2rem;
 }
 
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
   .container {
     width: 100%;
   }
 
   .tableLayout {
-    display: flex;
+    overflow: hidden;
   }
 
   .containerOpen .row__columnTitle {
@@ -340,10 +345,12 @@
 
   .row {
     display: block;
-    height: 10em;
+    width: 33.33%;
+    float: left;
+    /*//height: 10em;*/
   }
 
-  .row__column {
+  .row .row__column {
     flex-basis: inherit;
     max-width: inherit;
     width: 100%;
@@ -353,6 +360,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    font-size: 13px;
   }
 
   .row__column:nth-child(2n) {
@@ -368,7 +376,7 @@
     align-items: flex-end;
   }
 
-  .row__column#presupuests {
+  .presupuests {
     display: none;
   }
 
@@ -400,8 +408,8 @@
   }
 
   .person__avatar img {
-    max-width: 5em;
-    max-height: 5em;
+    max-width: 4em;
+    max-height: 4em;
   }
 
   .person__name {
@@ -414,9 +422,9 @@
   }
 
   .content {
-    height: 770px;
+    height: auto;
     width: 100%;
-    top: 21em;
+    position: relative;
   }
 
   .content__inner {
@@ -429,7 +437,8 @@
   }
 
   .destination__title {
-    font-size: calc(.8em + 1vw);
+    font-size: 1em;
+    margin-top: 0;
     margin-bottom: 0;
   }
 
@@ -453,6 +462,10 @@
     font-size: .8em;
   }
 
+  .destination__amound br {
+    display: none;
+  }
+
   #destinations .visuallyHidden {
     position: inherit;
     width: auto;
@@ -468,7 +481,7 @@
   }
 }
 
-@media (min-width: 769px) {
+@media screen and (min-width: 769px) {
   .destination__amound {
     display: block;
     position: absolute;

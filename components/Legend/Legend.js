@@ -26,9 +26,11 @@ class Legend extends React.Component {
     if (!this.state.items) return;
     return this.state.items.map((partido, index) => {
       let hovering = false;
-      if (this.props.hovering.length) {
-        if (this.props.hovering.indexOf(partido.nodeId) !== -1) {
-          hovering = true;
+      if (this.props.hovering) {
+        if (this.props.hovering.length) {
+          if (this.props.hovering.indexOf(partido.nodeId) !== -1) {
+            hovering = true;
+          }
         }
       }
 

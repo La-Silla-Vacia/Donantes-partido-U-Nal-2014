@@ -5,8 +5,8 @@
   max-width: var(--screen-lg-min);
   margin: 0 auto;
   background-color: var(--brand-white);
-  padding-left: 1em;
-  padding-right: 1em;
+  padding-left: 6em;
+  padding-right: 6em;
 }
 
 .root__full_width {
@@ -30,14 +30,14 @@
   border-top: 1px solid #ddd;
 }
 
-.upperTitle span {
+.upperTitle > span {
   background: var(--brand-red);
   width: 30px;
   padding: 2px;
   display: block !important;
 }
 
-.upperTitle h2 {
+.upperTitle > h2 {
   color: #444848;
   font-family: 'Roboto Slab', serif;
   text-transform: uppercase;

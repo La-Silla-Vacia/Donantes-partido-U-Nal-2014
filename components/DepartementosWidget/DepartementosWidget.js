@@ -1,7 +1,10 @@
 import React from 'react';
 import cx from 'classnames';
+import MarkdownIt from 'markdown-it';
+const md = new MarkdownIt();
 import Widget from '../Widget';
 import Legend from '../Legend';
+import Select from '../Select';
 import s from './DepartementosWidget.css';
 
 class Navigation extends React.Component {
@@ -10,14 +13,22 @@ class Navigation extends React.Component {
     super();
 
     this.state = {
+      departementos: [],
       departemento: 'Bogotá',
       columns: 0,
+      legendItems: [],
       context: [],
-      loading: true
+      loading: true,
+      data: [],
+      hoverIndex: false,
+      activeRow: 999,
+      activeContent: ''
     };
 
 
     this.processData = this.processData.bind(this);
+    this.switchOption = this.switchOption.bind(this);
+    this.callback = this.callback.bind(this);
   }
 
   componentWillReceiveProps(newprops) {
@@ -27,27 +38,53 @@ class Navigation extends React.Component {
     }
   }
 
-  processData(data) {
+  processData(data, newDepartemento) {
     const thisdata = [];
+    const departementos = [];
+    const legendItems = [];
+    let departemento = this.state.departemento;
+    if (newDepartemento) departemento = newDepartemento;
 
     for (let i = 0; i < data.length; i += 1) {
-      const thisDepart = this.state.departemento.toLowerCase();
+      const thisDepart = departemento.toLowerCase();
       const newDepart = data[i].departamento.toLowerCase();
 
       if (thisDepart === newDepart) {
         thisdata.push(data[i]);
       }
+
+      let inLegend = false;
+      const partido = data[i].partido;
+      legendItems.map((item) => {
+        if (item.name == partido)
+          inLegend = true;
+      });
+      if (!inLegend) legendItems.push({name: partido, colorPartido: data[i].colorPartido});
+
+      let inDepartamento = false;
+      const departamento = data[i].departamento;
+      departementos.map((item) => {
+        if (item.label == departamento)
+          inDepartamento = true;
+      });
+      if (!inDepartamento) departementos.push({label: departamento, value: departamento});
     }
 
     const columnCount = thisdata.length;
-    this.setState({columns: columnCount});
+    this.setState({
+      columns: columnCount,
+      legendItems: legendItems,
+      departementos: departementos,
+      data: thisdata
+    });
 
-    this.data = thisdata;
-    this.mergeData();
+    this.mergeData(thisdata);
   }
 
-  mergeData() {
-    const data = this.data;
+  mergeData(newData) {
+    let data = this.state.data;
+    if (newData) data = newData;
+
     for (let i = 0; i < data.length; i += 1) {
       const item = data[i];
 
@@ -68,33 +105,44 @@ class Navigation extends React.Component {
       if (item.fotoDelPadrino === '') item.fotoDelPadrino = './images/avatars/undefined.jpg';
     }
 
-    const context = data;
+    this.setState({context: data});
+  }
 
-    this.setState({context});
+  callback(type, index) {
+    if (type == 'click') {
+      this.handleClick(index);
+    } else {
+      this.handleMouseEnter(index);
+    }
+  }
 
-    // const cabezasSource = $('#cabezas-template').html();
-    // const cabezasTemplate = Handlebars.compile(cabezasSource);
-    // $('#cabezas').append(cabezasTemplate(context));
-    //
-    // const presupuestsSource = $('#presupuests-template').html();
-    // const presupuestsTemplate = Handlebars.compile(presupuestsSource);
-    // $('#presupuests').append(presupuestsTemplate(context));
-    //
-    // const destinationsSource = $('#destinations-template').html();
-    // const destinationsTemplate = Handlebars.compile(destinationsSource);
-    // $('#destinations').append(destinationsTemplate(context));
-    //
-    // this.watch();
+  handleClick(index) {
+    if (this.state.activeRow == index) {
+      this.setState({activeRow: 999});
+    } else {
+      const parrafo = this.state.context[index].parrafo;
+      const content = md.render(parrafo);
+      console.log(content);
+      this.setState({
+        activeRow: index,
+        activeContent: content
+      });
+    }
+  }
+
+  handleMouseEnter(index) {
+    this.setState({hoverIndex: index});
   }
 
   getPadrinos() {
     return this.state.context.map((padrino, index) => {
       return (
-        <div key={index} className={cx(
-          s.row__column,
-          s.person,
-          s.personWidthArrow
-        )}>
+        <RowColumn
+          key={index}
+          hoverActive={index == this.state.hoverIndex}
+          currentActive={index == this.state.activeRow}
+          index={index}
+          callback={this.callback}>
           <div className={s.column__inner}>
             <figure className={s.person__avatar}>
               <img src={ padrino.fotoDelPadrino } width="100" alt={ padrino.padrino }/>
@@ -102,7 +150,7 @@ class Navigation extends React.Component {
             <h3 className={s.person__name}>{ padrino.padrino }</h3>
             <p className={s.person__function}>{ padrino.cargoDelPadrino }</p>
           </div>
-        </div>
+        </RowColumn>
       )
     });
   }
@@ -110,11 +158,14 @@ class Navigation extends React.Component {
   getCabezas() {
     return this.state.context.map((cabeza, index) => {
       return (
-        <div key={index} className={cx(
-          s.row__column,
-          s.person,
-          s.personSmall
-        )}>
+        <RowColumn
+          key={index}
+          hoverActive={index == this.state.hoverIndex}
+          currentActive={index == this.state.activeRow}
+          index={index}
+          callback={this.callback}
+          customClass={s.personSmall}
+        >
           <div className={s.column__inner}>
             <figure className={s.person__avatar}>
               <img src={ cabeza.fotoDeLaCabeza } width="100" alt={ cabeza.nombreDeLaCabeza}/>
@@ -122,13 +173,12 @@ class Navigation extends React.Component {
             <h3 className={s.person__name}>{ cabeza.nombreDeLaCabeza }</h3>
             <p className={s.person__function}>{ cabeza.cargoDeLaCabeza }</p>
           </div>
-        </div>
+        </RowColumn>
       )
     })
   }
 
   getPresupuests() {
-
     return this.state.context.map((item, index) => {
       let inversion;
       if (item.presupuestoDeInversion) {
@@ -146,12 +196,21 @@ class Navigation extends React.Component {
       }
 
       return (
-        <div key={index} className={cx(
-          s.row__column,
-          s.columnLineCenter,
-          s.budget
-        )}
-             style={{color: item.colorPartido, minHeight: `${item.halfBudgetWidth}px`}}>
+        <div key={index}
+             className={cx(
+               s.row__column,
+               s.columnLineCenter,
+               s.budget,
+               {[s.hover]: this.state.hoverIndex == index},
+               {[s.row__columnOpen]: this.state.activeRow == index}
+             )}
+             style={{
+               color: item.colorPartido,
+               minHeight: `${item.halfBudgetWidth}px`
+             }}
+             onClick={this.handleClick.bind(this, index)}
+             onMouseEnter={this.handleMouseEnter.bind(this, index)}
+        >
           <div className={s.column__inner}>
             {inversion}
           </div>
@@ -169,14 +228,21 @@ class Navigation extends React.Component {
 
       let presupuestoDeInversion = (<span className={s.destination__amound}>Sin definir</span>);
       if (item.presupuestoDeInversion) {
-        presupuestoDeInversion = (<span className={s.destination__amound}>{this.formatCurrency(item.presupuestoDeInversion)}<br/>millones</span>)
+        presupuestoDeInversion = (<span
+          className={s.destination__amound}>{this.formatCurrency(item.presupuestoDeInversion)}<br/> millones</span>)
       }
 
       return (
-        <div key={index} className={cx(
-          s.row__column,
-          s.destination
-        )}>
+        <div key={index}
+             className={cx(
+               s.row__column,
+               s.destination,
+               {[s.hover]: this.state.hoverIndex == index},
+               {[s.row__columnOpen]: this.state.activeRow == index}
+             )}
+             onClick={this.handleClick.bind(this, index)}
+             onMouseEnter={this.handleMouseEnter.bind(this, index)}
+        >
 
           <div className={s.column__inner}>
             <figure className={s.destination__brand} style={{color: item.colorPartido}}>
@@ -203,12 +269,25 @@ class Navigation extends React.Component {
     }
   }
 
-  render() {
+  switchOption(e) {
+    this.setState({departemento: e.value, activeRow: 999});
+    this.processData(this.props.data, e.value);
+  }
 
+  render() {
     const padrinos = this.getPadrinos();
     const cabezas = this.getCabezas();
     const presupuests = this.getPresupuests();
     const entidades = this.getEntidades();
+
+    const select = (
+      <Select
+        className={s.select}
+        value="Bogotá"
+        options={this.state.departementos}
+        callback={this.switchOption}
+      />
+    );
 
     let loadText;
     if (this.state.loading) {
@@ -223,15 +302,21 @@ class Navigation extends React.Component {
       <Widget
         upperTitle="Lorem ipsum"
         upperDescription="Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Etiam porta sem malesuada magna mollis euismod. Cras mattis consectetur purus sit amet fermentum. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus."
-        title="Hoi"
+        title="Filtre por"
+        select={select}
+        floatTitle
       >
 
         <div className={cx(
           s.container,
-          {[s[`colCount_${this.state.columns}`]]: true}
+          {[s[`colCount_${this.state.columns}`]]: true},
+          {[s.containerOpen]: this.state.activeRow !== 999}
         )}>
 
-          <Legend />
+          <Legend
+            items={this.state.legendItems}
+          />
+
           <div className={s.tableLayout}>
 
             <div id="padrinos" className={s.row}>
@@ -255,7 +340,7 @@ class Navigation extends React.Component {
               {cabezas}
             </div>
 
-            <div id="presupuests" className={cx(s.row, s.rowLineBelow)}>
+            <div id="presupuests" className={cx(s.row, s.rowLineBelow, s.presupuests)}>
               <div className={cx(
                 s.row__column,
                 s.row__columnTitle
@@ -276,10 +361,15 @@ class Navigation extends React.Component {
               {entidades}
             </div>
 
-            <div className={cx(s.content, s.contentHidden)}>
+            <div
+              className={cx(
+                s.content,
+                {[s.contentHidden]: this.state.activeRow === 999}
+              )}
+            >
               <header className={s.content__header}>
                 <h2 style={{opacity: 0, visibility: 'hidden'}}>La historia</h2>
-                <button id="close__content" className={s.content__closeButton}>
+                <button onClick={this.handleClick.bind(this, this.state.activeRow)} className={s.content__closeButton}>
                   <svg className={s.closebtn} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 25 25">
                     <path className="a"
                           d="M17.45,6.84,12.5,11.79,7.55,6.84l-.71.71,4.95,4.95L6.84,17.45l.71.71,4.95-4.95,4.95,4.95.71-.71L13.21,12.5l4.95-4.95Z"/>
@@ -288,7 +378,7 @@ class Navigation extends React.Component {
                   </svg>
                 </button>
               </header>
-              <div className={s.content__inner}></div>
+              <div className={s.content__inner} dangerouslySetInnerHTML={{ __html: this.state.activeContent}} />
             </div>
           </div>
         </div>
@@ -296,7 +386,43 @@ class Navigation extends React.Component {
       </Widget>
     );
   }
+}
 
+
+class RowColumn extends React.Component {
+
+  constructor() {
+    super();
+    this.handleClick = this.handleClick.bind(this);
+    this.handleMouseEnter = this.handleMouseEnter.bind(this);
+  }
+
+  handleClick() {
+    this.props.callback('click', this.props.index);
+  }
+
+  handleMouseEnter() {
+    this.props.callback('mouseEnter', this.props.index);
+  }
+
+  render() {
+    return (
+      <div
+        className={cx(
+          s.row__column,
+          s.person,
+          s.personWidthArrow,
+          {[s.hover]: this.props.hoverActive},
+          {[s.row__columnOpen]: this.props.currentActive},
+          this.props.customClass
+        )}
+        onClick={this.handleClick}
+        onMouseEnter={this.handleMouseEnter}
+      >
+        {this.props.children}
+      </div>
+    );
+  }
 }
 
 export default Navigation;

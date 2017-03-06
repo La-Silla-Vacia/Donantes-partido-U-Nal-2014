@@ -1,10 +1,10 @@
-import React, { PropTypes } from 'react';
+import React, {PropTypes} from 'react';
 import cx from 'classnames';
 import s from './Widget.css';
 
 class Header extends React.Component {
 
-   static propTypes = {
+  static propTypes = {
     select: PropTypes.node,
     children: PropTypes.node,
   };
@@ -29,8 +29,10 @@ class Header extends React.Component {
             {this.props.upperTitle}
           </h2>
           <p>{this.props.upperDescription}</p>
+          <div>
+            {title}
+          </div>
         </div>
-        {title}
         {this.props.children}
       </section>
     );

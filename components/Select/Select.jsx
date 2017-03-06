@@ -38,23 +38,27 @@ class Select extends React.Component {
     });
     this.props.callback(option);
 
-    const optionIndex = this.props.options.indexOf(option);
-
+    const optionIndex = this.state.options.indexOf(option);
     const newOptions = [
       this.props.options[optionIndex]
     ];
+
     for (let i = 0; i < this.props.options.length; i += 1) {
       if (i != optionIndex)
         newOptions.push(this.props.options[i]);
     }
-
-    this.state.options = newOptions;
+    this.setState({options: newOptions});
     this.setState({open: false});
   }
 
   componentWillMount() {
-    this.state.currentOption = this.props.value;
-    this.state.options = this.props.options;
+    this.setState({currentOption: this.props.value});
+  }
+
+  componentWillReceiveProps(newprops) {
+    if (newprops.options.length > this.state.options.length) {
+      this.setState({options: newprops.options});
+    }
   }
 
   render() {
