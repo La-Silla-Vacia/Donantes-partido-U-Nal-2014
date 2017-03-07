@@ -2,11 +2,25 @@
 
 .root {
   width: 100%;
-  max-width: var(--screen-lg-min);
+  max-width: var(--containerWidth);
   margin: 0 auto;
   background-color: var(--brand-white);
   padding-left: 6em;
   padding-right: 6em;
+}
+
+@media screen and (max-width: 940px) {
+  .root {
+    padding-left: 3em;
+    padding-right: 3em;
+  }
+}
+
+@media screen and (max-width: 940px) {
+  .root {
+    padding-left: 1.5em;
+    padding-right: 1.5em;
+  }
 }
 
 .root__full_width {
@@ -22,11 +36,11 @@
 }
 
 .upperTitle {
-  max-width: 1200px;
+  max-width: 1032px;
   margin: 0 auto;
   padding-top: 60px;
-  padding-left: 2em;
-  padding-right: 2em;
+  padding-left: 1em;
+  padding-right: 1em;
   border-top: 1px solid #ddd;
 }
 
@@ -64,4 +78,11 @@
   margin-top: 0.5em;
   margin-right: 0;
   font-size: 0.8em;
+}
+
+@media screen and (max-width: 940px) {
+  .floatTitle {
+    float: none;
+    text-align: left;
+  }
 }

@@ -93,7 +93,7 @@
 }
 
 .legend {
-  width: 70%;
+  max-width: 700px;
   margin-right: 10%;
   padding-left: 1em;
 }

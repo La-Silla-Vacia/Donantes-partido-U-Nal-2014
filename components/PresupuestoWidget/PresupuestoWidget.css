@@ -15,6 +15,13 @@
 .widget {
   min-height: 66vh;
   position: relative;
+  margin-right: -6em;
+}
+
+@media screen and (max-width: 940px) {
+  .widget {
+    margin-right: -1.5em;
+  }
 }
 
 .partido {
@@ -39,9 +46,15 @@
   opacity: 0;
 }
 
+.legendContainer {
+  max-width: 700px;
+  margin-right: 10%;
+  padding-left: 1em;
+}
+
+
 .legend {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding-left: 6em;
-  padding-right: 6em;
+  max-width: 700px;
+  margin-right: 10%;
+  padding-left: 1em;
 }

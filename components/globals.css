@@ -31,13 +31,27 @@ article header .submitted,
   padding-right: 0;
 }
 
+.menu-ancla,
+.panel-separator {
+  padding: 0 !important;
+  margin: 0 !important
+}
+
 #wrapper {
   width: inherit;
+  background-color: transparent;
 }
+
 #header,
-.header-adds {
-  max-width: 1200px;
+.header-adds,
+.tabs {
+  max-width: 1280px;
   margin: 0 auto;
+  background-color: #fff;
+}
+
+.tabs .tabs--primary.nav.nav-tabs {
+  margin-bottom: 0;
 }
 
 #silla-interactive-container {
@@ -49,7 +63,7 @@ article header .submitted,
 }
 
 #comments {
-  max-width: 1200px;
+  max-width: 1280px;
   margin: 0 auto;
   float: none;
 }

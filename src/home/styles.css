@@ -1,12 +1,13 @@
 @import '../../components/variables.css';
 
 .content {
-  padding: 6em 1em;
+  padding: 6em 1em 75px;
   margin: 0 auto;
-  max-width: 1200px;
+  max-width: var(--containerWidth);
   width: 100%;
   text-align: center;
   background-color: var(--brand-white);
+  overflow: hidden;
 }
 
 .content h1 {
@@ -17,10 +18,11 @@
   font-size: 48px;
   padding-bottom: 20px;
   font-weight: 700;
+  margin-top: 11px;
 }
 
 .content h2 {
-  margin-top: 0;
+  margin: 0;
   color: var(--brand-red);
   font-family: Roboto, sans-serif;
   text-transform: uppercase;
@@ -28,17 +30,16 @@
   letter-spacing: 1px;
   line-height: 1.5em;
   font-weight: 700;
-  padding: 10px 0 0px 0;
 }
 
-.content h2::after {
-  content: '';
-  width: 4em;
-  height: 2px;
-  background-color: var(--brand-black);
-  display: block;
-  margin: 2em auto;
-}
+/*.content h2::after {*/
+  /*content: '';*/
+  /*width: 4em;*/
+  /*height: 2px;*/
+  /*background-color: var(--brand-black);*/
+  /*display: block;*/
+  /*margin: 2em auto;*/
+/*}*/
 
 .content p {
   font-family: 'Georgia', Times new roman, serif;
@@ -48,7 +49,7 @@
 }
 
 .seperator {
-  max-width: 1200px;
+  max-width: var(--containerWidth);
   padding: 60px 0 0;
   border-top: 1px solid #ddd;
 }

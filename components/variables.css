@@ -17,6 +17,7 @@
   --max-content-width: 60em;
   --transition-duration: 0.2s;
 
+  --containerWidth: 1280px;
   /*
    * Layout
    * ======================================================================== */

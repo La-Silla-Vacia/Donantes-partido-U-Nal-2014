@@ -301,7 +301,7 @@ class Navigation extends React.Component {
     return (
       <Widget
         upperTitle="Lorem ipsum"
-        upperDescription="Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Etiam porta sem malesuada magna mollis euismod. Cras mattis consectetur purus sit amet fermentum. Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus."
+        upperDescription="Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Morbi leo risus, porta ac consectetur ac, vestibulum at eros."
         title="Filtre por"
         select={select}
         floatTitle
@@ -313,9 +313,11 @@ class Navigation extends React.Component {
           {[s.containerOpen]: this.state.activeRow !== 999}
         )}>
 
-          <Legend
-            items={this.state.legendItems}
-          />
+          <div className={s.legend}>
+            <Legend
+              items={this.state.legendItems}
+            />
+          </div>
 
           <div className={s.tableLayout}>
 
@@ -378,7 +380,7 @@ class Navigation extends React.Component {
                   </svg>
                 </button>
               </header>
-              <div className={s.content__inner} dangerouslySetInnerHTML={{ __html: this.state.activeContent}} />
+              <div className={s.content__inner} dangerouslySetInnerHTML={{__html: this.state.activeContent}}/>
             </div>
           </div>
         </div>

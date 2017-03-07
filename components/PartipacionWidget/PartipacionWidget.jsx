@@ -29,7 +29,7 @@ class PartipacionWidget extends React.Component {
       nodes: [],
       nodeActive: [],
       linkActive: 999,
-      activeText: "Cargando visualización...",
+      activeText: "",
       activeAmount: "",
       chartWidth: 1200,
       chartHeight: 1000,
@@ -192,6 +192,16 @@ class PartipacionWidget extends React.Component {
     const items = this.getItems();
     const nodes = this.getNodes();
 
+    let textBox;
+    if (this.state.activeText) {
+      textBox = (
+        <div className={s.textBox}>
+          <span className={s.activeText}>{this.state.activeText}</span>
+          <span className={s.activeAmount}>{this.state.activeAmount}</span>
+        </div>
+      );
+    }
+
     return (
       <Widget
         upperTitle="Clientelismo en los Partidos"
@@ -221,10 +231,7 @@ class PartipacionWidget extends React.Component {
               </g>
             </g>
           </svg>
-          <div className={s.textBox}>
-            <span className={s.activeText}>{this.state.activeText}</span>
-            <span className={s.activeAmount}>{this.state.activeAmount}</span>
-          </div>
+          {textBox}
         </div>
 
       </Widget>
@@ -233,9 +240,6 @@ class PartipacionWidget extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     this.createWidget(nextProps.data);
-    if (nextProps.data.length && !this.state.activeAmount) {
-      this.setState({activeText: `Seleccione un filtro para ver la participación de los partidos políticos por entidad y por departamento. Al hacer clic en cada relación usted podrá ver cuánto es su presupuesto.`})
-    }
   }
 
   createWidget(incommingData) {

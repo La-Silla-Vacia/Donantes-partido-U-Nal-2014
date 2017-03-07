@@ -17,8 +17,8 @@ class PresupuestoWidget extends React.Component {
           value: "partidoPolitico",
         },
         {
-          label: "Departementos",
-          value: "departemento"
+          label: "Departamentos",
+          value: "departamento"
         },
         {
           label: "Entidades",
@@ -63,10 +63,16 @@ class PresupuestoWidget extends React.Component {
       "children": data.children
     };
 
-    const width = window.innerWidth,
-      height = window.innerHeight / 3 * 2,
-      div = d3.select("#presupuestoChart")
-        .style("height", height + 'px');
+    let width = window.innerWidth,
+      height = window.innerHeight / 3 * 2;
+
+    if (width > 1280) {
+      width = 1280;
+    }
+
+    const div = d3.select("#presupuestoChart")
+      .style("height", height + 'px');
+
 
     const treemap = d3.layout.treemap()
       .size([width, height])
@@ -97,7 +103,7 @@ class PresupuestoWidget extends React.Component {
 
     data.map((el, index) => {
       let category = el.partido;
-      if (sortBy == "departemento") {
+      if (sortBy == "departamento") {
         category = el.departamento;
       } else if (sortBy == "entidade") {
         category = el.entidad
@@ -122,7 +128,7 @@ class PresupuestoWidget extends React.Component {
           let color = el.colorPartido;
           if (sortBy == "entidade") {
             color = this.shadeColor("#cd2851", -(i * 3));
-          } else if (sortBy == "departemento") {
+          } else if (sortBy == "departamento") {
             color = this.shadeColor("#44a5db", -(i * 3));
           }
 
@@ -130,7 +136,7 @@ class PresupuestoWidget extends React.Component {
             partido: el.partido,
             categoryName: category,
             color: color,
-            departemento: el.departemento,
+            departamento: el.departamento,
             presupuestoDeInversion: el.presupuestoDeInversion,
             id: i
           };
@@ -214,7 +220,6 @@ class PresupuestoWidget extends React.Component {
         upperDescription="Donec sed odio dui. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ullamcorper nulla non metus auctor fringilla. Aenean lacinia bibendum nulla sed consectetur."
         title="Presupuesto por %s"
         select={select}
-        fullWidth={true}
         floatTitle
       >
 
