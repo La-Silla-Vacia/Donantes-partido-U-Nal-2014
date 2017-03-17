@@ -1,7 +1,7 @@
 import React from 'react';
 import 'whatwg-fetch';
 import Layout from '../../components/Layout';
-import Departementos from '../../components/DepartementosWidget';
+import TableWidget from '../../components/TableWidget';
 import Partipacion from '../../components/PartipacionWidget';
 import Presupuesto from '../../components/PresupuestoWidget';
 import s from './styles.css';
@@ -24,7 +24,7 @@ class HomePage extends React.Component {
   }
 
   getData() {
-    fetch('https://rayos-x-al-clientelismo.firebaseio.com/data.json')
+    fetch('https://lsv-data-visualizations.firebaseio.com/donantesPartidoUNal2014.json')
       .then((response) => {
         return response.json()
       })
@@ -40,9 +40,10 @@ class HomePage extends React.Component {
     return (
       <Layout>
         <div className={s.content} dangerouslySetInnerHTML={{ __html: html }} />
-        <Departementos data={this.state.data} />
-        <Partipacion data={this.state.data} width="1112" height="650" />
-        <Presupuesto data={this.state.data} />
+        {/*<Departementos data={this.state.data} />*/}
+        <TableWidget data={this.state.data.grupo} />
+        <Partipacion data={this.state.data.main} width="1112" height="650" />
+        <Presupuesto data={this.state.data.main} />
       </Layout>
     );
   }

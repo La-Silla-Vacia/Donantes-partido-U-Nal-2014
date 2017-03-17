@@ -35,7 +35,7 @@ class PartipacionWidgetNode extends React.Component {
 
     let y = this.props.y;
     let text;
-    let color = this.props.colorPartido;
+    let color = this.props.color;
     if (y > 1) {
       y += 30;
       text = <text textAnchor="left" x="30" y={`-${this.props.width / 2}`} dy=".35em"

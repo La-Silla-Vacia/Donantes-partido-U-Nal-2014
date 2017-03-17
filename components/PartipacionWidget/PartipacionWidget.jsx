@@ -15,12 +15,12 @@ class PartipacionWidget extends React.Component {
     this.state = {
       selectOptions: [
         {
-          label: "Entidades",
-          value: "entidades"
+          label: "Grupo empresarial",
+          value: "grupoEmpresarial"
         },
         {
-          label: "Departamentos",
-          value: "departementos"
+          label: "Estado origen",
+          value: "estadoOrigen"
         }
       ],
       legendItems: [],
@@ -33,7 +33,7 @@ class PartipacionWidget extends React.Component {
       activeAmount: "",
       chartWidth: 1200,
       chartHeight: 1000,
-      viewType: "entidades",
+      viewType: "Grupo empresarial",
     };
 
     this.switchOption = this.switchOption.bind(this);
@@ -60,7 +60,7 @@ class PartipacionWidget extends React.Component {
       const data = {
         path: item.path,
         strokeWidth,
-        color: item.source.colorPartido,
+        color: item.source.color,
         sourceName: item.source.name,
         targetName: item.target.name,
         value: item.value,
@@ -183,7 +183,7 @@ class PartipacionWidget extends React.Component {
     const select = (
       <Select
         className={s.select}
-        value="Entidades"
+        value="Grupo empresarial"
         options={this.state.selectOptions}
         callback={this.switchOption}
       />
@@ -326,19 +326,22 @@ class PartipacionWidget extends React.Component {
 
   formatData(data) {
     const sortBy = this.state.viewType;
-
+    const color = d3.scale.category20();
     const sources = [];
     const nodes = [];
     const links = [];
 
-    data.map((el) => {
-      let source = el.partido;
-      let target = el.entidad;
-      if (sortBy == "departementos") {
-        target = el.departamento;
+    data.map((el, index) => {
+      let source = el.grupoEmpresarial;
+      let target = el.partido;
+      if (!el.estadoOrigen) el.estadoOrigen = 'Sin definir';
+      if (!source) source = 'Sin definir';
+
+      if (sortBy == "estadoOrigen") {
+        source = el.estadoOrigen;
       }
 
-      const presupuesto = el.presupuestoDeInversion;
+      const presupuesto = el.montoDonacion;
 
       if (presupuesto) {
         let sourceInNodes = false;
@@ -348,7 +351,7 @@ class PartipacionWidget extends React.Component {
           if (node.name == target) targetInNodes = true;
         });
         if (!sourceInNodes) {
-          nodes.push({name: source, colorPartido: el.colorPartido});
+          nodes.push({name: source, color: color(index)});
         }
         if (!targetInNodes) nodes.push({name: target});
 
@@ -367,7 +370,7 @@ class PartipacionWidget extends React.Component {
         });
 
         let linkInLinks = false;
-        const value = presupuesto / 1000;
+        const value = presupuesto;
         const result = {"source": sourceIndex, "target": targetIndex, "value": value, "theValue": value};
 
         links.map((link) => {

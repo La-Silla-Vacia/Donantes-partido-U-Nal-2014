@@ -10,16 +10,19 @@ class Header extends React.Component {
   };
 
   render() {
-    const titleParts = this.props.title.split('%s');
-    const title = (
-      <h2 className={cx(
-        s.title,
-        {[s.floatTitle]: this.props.floatTitle}
-      )}>
-        {titleParts[0]}
-        {this.props.select}
-        {titleParts[1]}
-      </h2>);
+    let title;
+    if (this.props.title) {
+      const titleParts = this.props.title.split('%s');
+      title = (
+        <h2 className={cx(
+          s.title,
+          { [s.floatTitle]: this.props.floatTitle }
+        )}>
+          {titleParts[0]}
+          {this.props.select}
+          {titleParts[1]}
+        </h2>);
+    }
 
     return (
       <section className={cx(s.root, {[s.root__full_width]: this.props.fullWidth})}>

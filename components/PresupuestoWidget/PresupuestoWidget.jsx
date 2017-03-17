@@ -125,7 +125,7 @@ class PresupuestoWidget extends React.Component {
         if (!inChildren) {
           i += 1;
 
-          let color = el.colorPartido;
+          let color = el.color;
           if (sortBy == "entidade") {
             color = this.shadeColor("#cd2851", -(i * 3));
           } else if (sortBy == "departamento") {
@@ -169,7 +169,7 @@ class PresupuestoWidget extends React.Component {
   }
 
   mouseMove(e) {
-    console.log(e.target);
+    // console.log(e.target);
   }
 
   getNodes() {

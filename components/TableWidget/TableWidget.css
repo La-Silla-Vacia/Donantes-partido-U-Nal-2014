@@ -1,0 +1,89 @@
+@import '../variables.css';
+
+.root {
+  width: 100%;
+}
+
+.head {
+  background-color: var(--theme-color);
+}
+
+.heading {
+  font-family: var(--font-family-special);
+  color: #fff;
+  font-size: .8em;
+  font-weight: normal;
+  letter-spacing: 1px;
+  text-decoration: none;
+  text-transform: uppercase;
+  padding: 10px 1em;
+}
+
+.row {
+  cursor: pointer;
+}
+
+.row:hover {
+  background-color: rgba(199, 199, 199, 0.5);
+}
+
+.rowStriped {
+  background-color: rgba(199, 199, 199, 0.2);
+}
+
+.rowOpen {
+  background-color: rgba(199, 199, 199, 0.5);
+}
+
+.answerRow {
+  cursor: auto;
+}
+
+.answerRow:hover {
+  background-color: inherit;
+}
+
+.cell {
+  font-size: .9em;
+  padding: .5em 1em;
+}
+
+.answerCell {
+  border: 1px solid var(--brand-lightgrey);
+  position: relative;
+  padding: 3em;
+}
+
+.closeBtn {
+  position: absolute;
+  width: 1.5em;
+  height: 1.5em;
+  background: none;
+  border: 0;
+  padding: 0;
+}
+
+.closeBtn svg {
+  max-width: 100%;
+  height: auto;
+  fill: var(--brand-grey);
+}
+
+.imageContainer {
+  width: 2.857em;
+  height: 2.857em;
+  margin: 0;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.image {
+  width: 100%;
+  height: auto;
+}
+
+.content {
+  padding-top: 1.5em;
+  max-width: 40em;
+  font-size: 16px;
+}

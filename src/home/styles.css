@@ -12,7 +12,7 @@
 
 .content h1 {
   margin-bottom: 0;
-  color: #C00D0D;
+  color: var(--theme-color);
   font-family: Georgia, serif;
   text-transform: none;
   font-size: 48px;
@@ -23,7 +23,7 @@
 
 .content h2 {
   margin: 0;
-  color: var(--brand-red);
+  color: var(--theme-color);
   font-family: Roboto, sans-serif;
   text-transform: uppercase;
   font-size: 14px;

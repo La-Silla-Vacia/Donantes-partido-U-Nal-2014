@@ -59,7 +59,7 @@ class Navigation extends React.Component {
         if (item.name == partido)
           inLegend = true;
       });
-      if (!inLegend) legendItems.push({name: partido, colorPartido: data[i].colorPartido});
+      if (!inLegend) legendItems.push({name: partido, colorPartido: data[i].color});
 
       let inDepartamento = false;
       const departamento = data[i].departamento;
@@ -205,7 +205,7 @@ class Navigation extends React.Component {
                {[s.row__columnOpen]: this.state.activeRow == index}
              )}
              style={{
-               color: item.colorPartido,
+               color: item.color,
                minHeight: `${item.halfBudgetWidth}px`
              }}
              onClick={this.handleClick.bind(this, index)}
@@ -245,7 +245,7 @@ class Navigation extends React.Component {
         >
 
           <div className={s.column__inner}>
-            <figure className={s.destination__brand} style={{color: item.colorPartido}}>
+            <figure className={s.destination__brand} style={{color: item.color}}>
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 43.53 49.16">
                 <path style={{fill: 'currentColor'}}
                       d="M20,48.69,1.78,38.17A3.55,3.55,0,0,1,0,35.1v-21A3.55,3.55,0,0,1,1.78,11L20,.48a3.55,3.55,0,0,1,3.55,0L41.75,11a3.55,3.55,0,0,1,1.78,3.08v21a3.55,3.55,0,0,1-1.78,3.08L23.54,48.69A3.55,3.55,0,0,1,20,48.69Z"/>

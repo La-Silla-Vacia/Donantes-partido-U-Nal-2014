@@ -38,8 +38,8 @@ class PartipacionWidgetItem extends React.Component {
 
     return (
       <g>
-        <mask className={s.mask} id={`mask-${this.props.index}`} x="-500" y="0" width="1500" height="1000">
-          <rect x="-200" y="20" width="1800" height={maskHeight} className={s.maskLayer}
+        <mask className={s.mask} id={`mask-${this.props.index + 99}`} x="-200" y="0" width="1500" height="1000">
+          <rect x="-100" y="0" width="1600" height={maskHeight} className={s.maskLayer}
                 style={{stroke: "none", fill: "#ffffff"}}/>
         </mask>
         <path className={cx(s.link)}
@@ -53,7 +53,7 @@ class PartipacionWidgetItem extends React.Component {
               d={this.props.path}
               style={{strokeWidth: this.props.strokeWidth, stroke: this.props.color}}
               transform="translate(0, 15)"
-              mask={`url(#mask-${this.props.index})`}
+              mask={`url(#mask-${this.props.index + 99})`}
         />
       </g>
     )

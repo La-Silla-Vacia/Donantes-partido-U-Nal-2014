@@ -22,7 +22,7 @@ class LegendItem extends React.Component {
           onMouseEnter={this.mouseEnter}
           onClick={this.mouseEnter}
       >
-        <span className={s.bullet} style={{backgroundColor: partido.colorPartido}}/>
+        <span className={s.bullet} style={{backgroundColor: partido.color}}/>
         {partido.name}
       </li>
     )

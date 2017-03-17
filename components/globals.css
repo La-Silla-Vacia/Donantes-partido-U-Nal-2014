@@ -1,5 +1,5 @@
 #silla-interactive-container {
-  font-size: 16px;
+  font-size: 14px;
   background-color: #f8f8f8;
 }
 
@@ -52,10 +52,6 @@ article header .submitted,
 
 .tabs .tabs--primary.nav.nav-tabs {
   margin-bottom: 0;
-}
-
-#silla-interactive-container {
-  font-size: 14px;
 }
 
 .article-full {
