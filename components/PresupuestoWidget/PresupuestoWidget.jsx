@@ -13,19 +13,15 @@ class PresupuestoWidget extends React.Component {
     this.state = {
       selectOptions: [
         {
-          label: "Partido Póliticos",
-          value: "partidoPolitico",
+          label: "Grupo empresarial",
+          value: "grupoEmpresarial",
         },
         {
-          label: "Departamentos",
-          value: "departamento"
-        },
-        {
-          label: "Entidades",
-          value: "entidade"
+          label: "Estado origen",
+          value: "estadoOrigen"
         }
       ],
-      viewType: "partidoPolitico",
+      viewType: "grupoEmpresarial",
       legendItems: [],
       hovering: false,
       data: [],
@@ -38,7 +34,7 @@ class PresupuestoWidget extends React.Component {
   }
 
   switchOption(e) {
-    this.setState({viewType: e.value});
+    this.setState({ viewType: e.value });
     setTimeout(() => {
       this.formatData(this.state.data);
     }, 10);
@@ -50,14 +46,14 @@ class PresupuestoWidget extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({data: nextProps.data});
+    this.setState({ data: nextProps.data });
     this.formatData(nextProps.data);
   }
 
   createWidget() {
     const nodes = [];
     const data = this.state.formattedData;
-    this.setState({'legendItems': data.legendItems});
+    this.setState({ 'legendItems': data.legendItems });
 
     const tree = {
       "children": data.children
@@ -66,8 +62,8 @@ class PresupuestoWidget extends React.Component {
     let width = window.innerWidth,
       height = window.innerHeight / 3 * 2;
 
-    if (width > 1280) {
-      width = 1280;
+    if (width > 1032) {
+      width = 1032;
     }
 
     const div = d3.select("#presupuestoChart")
@@ -91,7 +87,7 @@ class PresupuestoWidget extends React.Component {
       })
       .remove();
 
-    this.setState({nodes});
+    this.setState({ nodes });
   }
 
   formatData(data) {
@@ -102,52 +98,59 @@ class PresupuestoWidget extends React.Component {
     const sortBy = this.state.viewType;
 
     data.map((el, index) => {
-      let category = el.partido;
-      if (sortBy == "departamento") {
-        category = el.departamento;
-      } else if (sortBy == "entidade") {
-        category = el.entidad
-      }
+        let category = el.grupoEmpresarial;
+        if (sortBy == "estadoOrigen") {
+          category = el.estadoOrigen;
+        } else if (sortBy == "entidade") {
+          category = el.entidad
+        }
 
-      const presupuesto = el.presupuestoDeInversion;
+        if (!category) category = 'Sin definir';
 
-      // only continue if there is money involved
-      if (presupuesto) {
+        const presupuesto = el.montoDonacion;
 
-        let inChildren = false;
-        children.map((child) => {
-          if (child.categoryName == category) {
-            inChildren = true;
-            child.presupuestoDeInversion += Number(presupuesto);
+        // only continue if there is money involved
+        if (presupuesto) {
+
+          let inChildren = false;
+          children.map((child) => {
+            if (child.categoryName == category) {
+              inChildren = true;
+              // console.log(child);
+              child.presupuestoDeInversion += Number(presupuesto);
+            }
+          });
+
+          if (!inChildren) {
+            i += 1;
+
+            let thisColor = el.grupoColor;
+            // console.log(source, el);
+            function colores_google(n) {
+              const colores_g = ["#00537f", "#1c7b8d", "#904091", "#a6d164", "#b5805d", "#cd2843", "#f6b220", "#033a5a", "#904091", "#6633cc", "#e67300", "#8b0707", "#651067", "#329262", "#5574a6", "#3b3eac"];
+              return colores_g[n % colores_g.length];
+            }
+
+            if (!thisColor) thisColor = colores_google(i);
+
+            const newEl = {
+              partido: el.grupoEmpresarial,
+              categoryName: category,
+              color: thisColor,
+              departamento: el.departamento,
+              presupuestoDeInversion: presupuesto,
+              id: i
+            };
+
+            children.push(newEl);
+            // console.log(thisColor);
+            legendItems.push({ name: category, color: thisColor, nodeId: index + 1 });
           }
-        });
-
-        if (!inChildren) {
-          i += 1;
-
-          let color = el.color;
-          if (sortBy == "entidade") {
-            color = this.shadeColor("#cd2851", -(i * 3));
-          } else if (sortBy == "departamento") {
-            color = this.shadeColor("#44a5db", -(i * 3));
-          }
-
-          const newEl = {
-            partido: el.partido,
-            categoryName: category,
-            color: color,
-            departamento: el.departamento,
-            presupuestoDeInversion: el.presupuestoDeInversion,
-            id: i
-          };
-
-          children.push(newEl);
-          legendItems.push({name: category, colorPartido: color, nodeId: index + 1});
         }
       }
-    });
+    );
 
-    this.setState({formattedData: {children, legendItems}});
+    this.setState({ formattedData: { children, legendItems } });
     setTimeout(() => {
       this.createWidget();
     }, 10);
@@ -194,8 +197,8 @@ class PresupuestoWidget extends React.Component {
           right: node.x,
           top: node.y,
         }}>
-          <h3 className={cx(s.partido, {[s.partido__hidden]: hideTitle})}>{node.categoryName}</h3>
-          <span className={cx(s.money, {[s.money__hidden]: hideMoney})}>{amoundOfMoney} Mil Millones</span>
+          <h3 className={cx(s.partido, { [s.partido__hidden]: hideTitle })}>{node.categoryName}</h3>
+          <span className={cx(s.money, { [s.money__hidden]: hideMoney })}>{amoundOfMoney} Mil Millones</span>
         </div>
       )
     });
@@ -205,7 +208,7 @@ class PresupuestoWidget extends React.Component {
     const select = (
       <Select
         className={s.select}
-        value="Partido Pólitico"
+        value="Grupo empresarial"
         options={this.state.selectOptions}
         callback={this.switchOption}
       />

@@ -41,7 +41,7 @@ class TableRow extends React.Component {
             <img className={s.image} width="100" src={ imagen } alt="" />
           </figure>
         </td>
-        <td className={s.cell} dangerouslySetInnerHTML={{ __html: md.render(grupo) }} />
+        <td className={cx(s.cell, s.grupo)} dangerouslySetInnerHTML={{ __html: md.render(grupo) }} />
         <td className={s.cell} dangerouslySetInnerHTML={{ __html: md.render(cantidad) }} />
         <td className={s.cell} dangerouslySetInnerHTML={{ __html: md.render(valor) }} />
         <td className={s.cell} dangerouslySetInnerHTML={{ __html: md.render(partidos) }} />

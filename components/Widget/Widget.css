@@ -5,29 +5,6 @@
   max-width: var(--containerWidth);
   margin: 0 auto;
   background-color: var(--brand-white);
-  padding-left: 10em;
-  padding-right: 10em;
-}
-
-@media screen and (max-width: 1280px) {
-  .root {
-    padding-left: 6em;
-    padding-right: 6em;
-  }
-}
-
-@media screen and (max-width: 940px) {
-  .root {
-    padding-left: 3em;
-    padding-right: 3em;
-  }
-}
-
-@media screen and (max-width: 940px) {
-  .root {
-    padding-left: 1.5em;
-    padding-right: 1.5em;
-  }
 }
 
 .root__full_width {
@@ -70,6 +47,7 @@
 .upperTitle p {
   max-width: 400px;
   margin-bottom: 3em;
+  font-size: 1em;
 }
 
 .floatTitle {

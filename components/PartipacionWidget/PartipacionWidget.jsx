@@ -49,7 +49,7 @@ class PartipacionWidget extends React.Component {
   switchOption(e) {
     this.setState({viewType: e.value});
     setTimeout(() => {
-      console.log(this.state.viewType);
+      // console.log(this.state.viewType);
       this.createWidget(this.props.data);
     }, 10);
   }
@@ -330,7 +330,7 @@ class PartipacionWidget extends React.Component {
     const sources = [];
     const nodes = [];
     const links = [];
-
+    let i = 0;
     data.map((el, index) => {
       let source = el.grupoEmpresarial;
       let target = el.partido;
@@ -350,8 +350,19 @@ class PartipacionWidget extends React.Component {
           if (node.name == source) sourceInNodes = true;
           if (node.name == target) targetInNodes = true;
         });
+
         if (!sourceInNodes) {
-          nodes.push({name: source, color: color(index)});
+
+          let thisColor = el.grupoColor;
+          // console.log(source, el);
+          function colores_google(n) {
+             const colores_g = ["#00537f", "#1c7b8d", "#904091", "#a6d164", "#b5805d", "#cd2843", "#f6b220", "#033a5a", "#904091", "#6633cc", "#e67300", "#8b0707", "#651067", "#329262", "#5574a6", "#3b3eac"];
+            return colores_g[n % colores_g.length];
+          }
+          if (!thisColor) thisColor = colores_google(i);
+
+          nodes.push({name: source, color: thisColor});
+          i++;
         }
         if (!targetInNodes) nodes.push({name: target});
 

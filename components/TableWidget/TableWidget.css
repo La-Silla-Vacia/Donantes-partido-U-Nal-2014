@@ -19,6 +19,12 @@
   padding: 10px 1em;
 }
 
+@media screen and (max-width: 640px) {
+  .heading {
+    padding: 10px .2em;
+  }
+}
+
 .row {
   cursor: pointer;
 }
@@ -48,10 +54,33 @@
   padding: .5em 1em;
 }
 
+@media screen and (max-width: 640px) {
+  .cell {
+    padding: .5em .2em;
+  }
+}
+
+.grupo {
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+.grupo p {
+  font-size: 1em;
+  font-weight: 700;
+  font-family: var(--font-family-display);
+}
+
 .answerCell {
   border: 1px solid var(--brand-lightgrey);
   position: relative;
   padding: 3em;
+}
+
+@media screen and (max-width: 640px) {
+  .answerCell {
+    padding: 1em;
+  }
 }
 
 .closeBtn {
@@ -80,6 +109,18 @@
 .image {
   width: 100%;
   height: auto;
+}
+
+.triangle {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  border-left: .5em solid transparent;
+  border-right: .5em solid transparent;
+  left: 1.9em;
+  border-bottom: .5em solid #fff;
+  top: -.5em;
 }
 
 .content {

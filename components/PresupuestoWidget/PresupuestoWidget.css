@@ -15,12 +15,12 @@
 .widget {
   min-height: 66vh;
   position: relative;
-  margin-right: -6em;
+  /*margin-right: -10em;*/
 }
 
-@media screen and (max-width: 940px) {
+@media screen and (max-width: 992px) {
   .widget {
-    margin-right: -1.5em;
+    margin-right: -15px;
   }
 }
 
