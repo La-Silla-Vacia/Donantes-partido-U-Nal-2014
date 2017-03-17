@@ -25,9 +25,9 @@
 }
 
 .partido {
-  margin-top: 0;
-  font-weight: 500;
-  font-size: 0.7em;
+  margin-top: 0 !important;;
+  font-weight: 500 !important;;
+  font-size: 0.7em !important;
   color: var(--brand-white);
 }
 
@@ -37,7 +37,7 @@
 
 .money {
   display: block;
-  font-size: 2em;
+  font-size: 1em;
   font-weight: 100;
   margin-top: 0.25em;
 }
