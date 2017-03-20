@@ -77,6 +77,10 @@
   padding: 3em;
 }
 
+.answerCell p {
+  font-size: 1em !important;
+}
+
 @media screen and (max-width: 640px) {
   .answerCell {
     padding: 1em;

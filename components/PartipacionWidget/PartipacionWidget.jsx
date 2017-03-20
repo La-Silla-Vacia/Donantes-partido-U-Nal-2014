@@ -21,6 +21,14 @@ class PartipacionWidget extends React.Component {
         {
           label: "Estado origen",
           value: "estadoOrigen"
+        },
+        {
+          label: "Sector económico",
+          value: "sectorEconomico"
+        },
+        {
+          label: "De capital extranjero",
+          value: "deCapitalExtranjero"
         }
       ],
       legendItems: [],
@@ -204,8 +212,8 @@ class PartipacionWidget extends React.Component {
 
     return (
       <Widget
-        upperTitle="Clientelismo en los Partidos"
-        upperDescription="Seleccione un filtro para ver la participación de los partidos políticos por entidad y por departamento. Al hacer clic en cada relación usted podrá ver cuánto es su presupuesto."
+        upperTitle="Así fueron las donaciones"
+        upperDescription="No todos los grupos donaron por igual a los dos partidos. Pase el ratón sobre cada flecha para conocer más detalles."
         title="Filtre por %s"
         select={select}
         floatTitle
@@ -331,6 +339,7 @@ class PartipacionWidget extends React.Component {
     const nodes = [];
     const links = [];
     let i = 0;
+
     data.map((el, index) => {
       let source = el.grupoEmpresarial;
       let target = el.partido;
@@ -338,7 +347,16 @@ class PartipacionWidget extends React.Component {
       if (!source) source = 'Sin definir';
 
       if (sortBy == "estadoOrigen") {
-        source = el.estadoOrigen;
+        source = el.departamento;
+      } else if (sortBy == "sectorEconomico") {
+        source = el.sectorEconomico;
+      } else if (sortBy == "deCapitalExtranjero") {
+        source = el.deCapitalExtranjero;
+        if (source) {
+          source = 'Con capital extranjero';
+        } else {
+          source = 'Sin capital extranjero';
+        }
       }
 
       const presupuesto = el.montoDonacion;

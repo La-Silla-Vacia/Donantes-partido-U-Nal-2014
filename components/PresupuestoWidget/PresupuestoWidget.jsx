@@ -19,6 +19,14 @@ class PresupuestoWidget extends React.Component {
         {
           label: "Estado origen",
           value: "estadoOrigen"
+        },
+        {
+          label: "Sector económico",
+          value: "sectorEconomico"
+        },
+        {
+          label: "De capital extranjero",
+          value: "deCapitalExtranjero"
         }
       ],
       viewType: "grupoEmpresarial",
@@ -100,9 +108,17 @@ class PresupuestoWidget extends React.Component {
     data.map((el, index) => {
         let category = el.grupoEmpresarial;
         if (sortBy == "estadoOrigen") {
-          category = el.estadoOrigen;
-        } else if (sortBy == "entidade") {
-          category = el.entidad
+          category = el.departamento;
+          // console.log(el.departamento);
+        } else if (sortBy == "sectorEconomico") {
+          category = el.sectorEconomico;
+        } else if (sortBy == "deCapitalExtranjero") {
+          category = el.deCapitalExtranjero;
+          if (category) {
+            category = 'Con capital extranjero';
+          } else {
+            category = 'Sin capital extranjero';
+          }
         }
 
         if (!category) category = 'Sin definir';
@@ -219,8 +235,8 @@ class PresupuestoWidget extends React.Component {
 
     return (
       <Widget
-        upperTitle="Presupuesto"
-        upperDescription="Donec sed odio dui. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ullamcorper nulla non metus auctor fringilla. Aenean lacinia bibendum nulla sed consectetur."
+        upperTitle="Las donaciones, comparadas"
+        upperDescription="Una docena de grupos concentra casi 3 de cada 4 pesos donados."
         title="Presupuesto por %s"
         select={select}
         floatTitle

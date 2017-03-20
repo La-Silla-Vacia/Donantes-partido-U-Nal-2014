@@ -40,10 +40,13 @@ class TableWidget extends React.Component {
       if (this.state.open === id) {
         open = true;
       }
+
+      // console.log(item);
+
       const row = {
         grupo: item.grupo,
-        cantidad: item.cuantasDonaciones,
-        valor: item.cuantoDono,
+        cuantos: item.cuantasDonacionesHizo,
+        cantidad: item.cuantoDono,
         partidos: item.aQuePartidos,
         imagen: item.imagen,
         id,
@@ -108,8 +111,8 @@ class TableWidget extends React.Component {
     const rows = this.getRows();
     return (
       <Widget
-        upperTitle="Presupuesto"
-        upperDescription="Donec sed odio dui. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec ullamcorper nulla non metus auctor fringilla. Aenean lacinia bibendum nulla sed consectetur."
+        upperTitle="Los grandes donantes"
+        upperDescription="Los grandes grupos económicos fueron los principales financiadores. Haga click en cada grupo para conocer más detalles."
         floatTitle
       >
         <table className={s.root}>
@@ -117,7 +120,7 @@ class TableWidget extends React.Component {
           <tr>
             <th className={s.heading}/>
             <th className={s.heading}>Grupo</th>
-            <th className={s.heading}>Cuántas donaciones</th>
+            <th className={s.heading}>Cuántas donaciones hizo</th>
             <th className={s.heading}>Cuánto donó</th>
             <th className={s.heading}>A qué partidos</th>
           </tr>

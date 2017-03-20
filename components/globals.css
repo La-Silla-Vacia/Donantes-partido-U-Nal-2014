@@ -2,7 +2,8 @@
   font-size: 14px;
 }
 
-.article-sidebar.col-md-4 {
+.article-sidebar.col-md-4,
+.article-main-body > .img-container {
   display: none;
 }
 
@@ -33,7 +34,6 @@
 
 @media (min-width: 1200px) {
   .field-items > .field-item > p,
-  .article-main-body > .img-container,
   .article-main-body > .author {
     margin-left: 8.33333333%;
     padding-left: 30px;

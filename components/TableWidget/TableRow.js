@@ -21,7 +21,7 @@ class TableRow extends React.Component {
   }
 
   render() {
-    const {grupo, cantidad,	valor, partidos, id, open} = this.props;
+    const {grupo, cuantos, cantidad, partidos, id, open} = this.props;
     let imagen = this.props.imagen;
     if (!imagen) {
       imagen = 'http://archivo.lasillavacia.com/archivos/historias/odebrecht/15.jpg';
@@ -42,12 +42,24 @@ class TableRow extends React.Component {
           </figure>
         </td>
         <td className={cx(s.cell, s.grupo)} dangerouslySetInnerHTML={{ __html: md.render(grupo) }} />
-        <td className={s.cell} dangerouslySetInnerHTML={{ __html: md.render(cantidad) }} />
-        <td className={s.cell} dangerouslySetInnerHTML={{ __html: md.render(valor) }} />
+        <td className={s.cell}>{cuantos}</td>
+        <td className={s.cell} dangerouslySetInnerHTML={{ __html: (cantidad).formatMoney(0, '.', ',') }} />
         <td className={s.cell} dangerouslySetInnerHTML={{ __html: md.render(partidos) }} />
+        {/*<td className={s.cell} dangerouslySetInnerHTML={{ __html: md.render(partidos) }} />*/}
       </tr>
   );
   }
 }
+
+Number.prototype.formatMoney = function(w, x, y){
+  let n = this,
+    c = isNaN(w = Math.abs(w)) ? 2 : w,
+    d = x == undefined ? "." : x,
+    t = y == undefined ? "," : y,
+    s = n < 0 ? "-" : "",
+    i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
+    j = (j = i.length) > 3 ? j % 3 : 0;
+  return '$' + s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+};
 
 export default TableRow;
