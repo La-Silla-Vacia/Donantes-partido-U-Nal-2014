@@ -120,7 +120,7 @@ class TableWidget extends React.Component {
           <tr>
             <th className={s.heading}/>
             <th className={s.heading}>Grupo</th>
-            <th className={s.heading}>Cuántas donaciones hizo</th>
+            {/*<th className={s.heading}>Cuántas donaciones hizo</th>*/}
             <th className={s.heading}>Cuánto donó</th>
             <th className={s.heading}>A qué partidos</th>
           </tr>

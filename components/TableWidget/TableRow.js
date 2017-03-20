@@ -42,9 +42,9 @@ class TableRow extends React.Component {
           </figure>
         </td>
         <td className={cx(s.cell, s.grupo)} dangerouslySetInnerHTML={{ __html: md.render(grupo) }} />
-        <td className={s.cell}>{cuantos}</td>
+        {/*<td className={s.cell}>{cuantos}</td>*/}
         <td className={s.cell} dangerouslySetInnerHTML={{ __html: (cantidad).formatMoney(0, '.', ',') }} />
-        <td className={s.cell} dangerouslySetInnerHTML={{ __html: md.render(partidos) }} />
+        <td className={s.cell}>{partidos}</td>
         {/*<td className={s.cell} dangerouslySetInnerHTML={{ __html: md.render(partidos) }} />*/}
       </tr>
   );
@@ -52,6 +52,8 @@ class TableRow extends React.Component {
 }
 
 Number.prototype.formatMoney = function(w, x, y){
+  // console.log(this);
+
   let n = this,
     c = isNaN(w = Math.abs(w)) ? 2 : w,
     d = x == undefined ? "." : x,
